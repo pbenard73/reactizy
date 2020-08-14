@@ -5,15 +5,20 @@
 **Reactizy** is a toolkit allowing to simplify to use of *react-redux* and permitting to split *react component* in order to have a better readability, with some usefull utilities
 
 ## Summary
+* [Installation](#installation)
+* [Usage](#usage)
+    * [Using Redux and Reducers](#using-redux-and-reducers)
+        * [Store and Reduxers Creation](#store-and-reduxers-creation)
+            * [Reducers Creation](#reducers-creation)
+            * [Store Creation](#store-creation)
+            * [Usage in Component](#usage-in-component)
+        * [Custom Store with Reactizy Reduxers](#custom-store-with-reactizy-reduxers)
+    * [React Component Spliting](#react-component-spliting)
+    * [Autobind React Methods](#autobind-react-methods)
 
-* [Using Redux and Reducers](#using-redux-and-reducers)
-    * [Store and Reduxers Creation](#store-and-reduxers-creation)
-        * [Reducers Creation](#reducers-creation)
-        * [Store Creation](#store-creation)
-        * [Usage in Component](#usage-in-component)
-    * [Custom Store with Reactizy Reduxers](#custom-store-with-reactizy-reduxers)
-* [React Component Spliting](#react-component-spliting)
-* [Autobind React Methods](#autobind-react-methods)
+## Installation
+
+`npm install reactizy`
 
 ## Usage
 
@@ -157,6 +162,10 @@ export default createStore(reduxer(peopleReducer, animalReducer))
 *The two methods need to be called at the end of the main component's constructor with : `fusion.call(this, // OnePartialComponent, AnotherOne, AndAnotherOne)`*
 
 *Let's create a partial component *
+
+*The `state` property will be merge inside the main component state*
+
+*If you need to link an redux property or actions, just use the `reduxers` property, an array with two array inside, the first listing the state properties, the second one, the actions*
 
 ```js
 // src/partials/SubPage.js
