@@ -14,6 +14,8 @@
             * [Usage in Component](#usage-in-component)
         * [Custom Store with Reactizy Reduxers](#custom-store-with-reactizy-reduxers)
     * [React Component Spliting](#react-component-spliting)
+        * [Full merge with Reduxers](#full-merge-with-reduxers)
+        * [Simple merge without Reduxers](#simple-merge-without-reduxers)
     * [Autobind React Methods](#autobind-react-methods)
 
 ## Installation
@@ -90,8 +92,6 @@ ReactDOM.render(
 
 *To connect with a component, you've to link an array containing two arrays, the first for the state properties, the second one for the actions*
 
-*There are two ways of bindings, one with static property inside the component, the second, in declaring directly inside the `withReactizy` high order component.*
-
 ```js
 import React from "react";
 
@@ -106,9 +106,9 @@ function App(props) {
     );  
 }     
     
-const reduxers = [ ["peopleNumber"], ["addPeople"] ]
+App.reduxers = [ ["peopleNumber"], ["addPeople"] ]
 
-export default withReactizy(App, reduxers);
+export default withReactizy(App);
 ```
 
 ```js
@@ -123,7 +123,6 @@ class App extends React.Component {
         this.state = { foo: 'bar' }
     }
 
-    static reduxers = [ ["peopleNumber"], ["addPeople"] ]
 
     render() {
         return (
@@ -133,7 +132,9 @@ class App extends React.Component {
             </div>
         );  
     }
-}     
+}    
+
+App.reduxers = [ ["peopleNumber"], ["addPeople"] ]
     
 export default withReactizy(App);
 
@@ -159,7 +160,13 @@ export default createStore(reduxer(peopleReducer, animalReducer))
 
 ***fusion** do the merge of the partial component without the *autobind* utility*
 
-*The two methods need to be called at the end of the main component's constructor with : `fusion.call(this, // OnePartialComponent, AnotherOne, AndAnotherOne)`*
+***reactizy** do the merge in addition of *autobind* utility.
+
+*The three methods need to be called at the end of the main component's constructor with : `fusion.call(this, // OnePartialComponent, AnotherOne, AndAnotherOne)`*
+
+In order to merge a full partial component (reduxers, state, methods) you need to use the HOC `withReactizy`
+
+### Full merge with Reduxers
 
 *Let's create a partial component *
 
@@ -206,7 +213,71 @@ import React from "react";
 
 import SubPage from './partials/SubPage'
 
-import { withReactizy, reactizy } from "reactizy";
+import { withReactizy } from "reactizy";
+
+class App extends React.Component {
+    constructor(props) {
+        super(props)
+
+        this.state = { foo: 'bar' }
+    }
+
+    static.reduxers = [ ["peopleNumber"], ["addPeople"] ]
+
+    render() {
+        return (
+            <div className="App">
+                <p> There are {props.peopleNumber} people </p>
+                <button onClick={props.addPerson}>Add people</button>
+                { this.renderAnimal()  }
+            </div>
+        );
+    }
+}
+
+export default withReactizy(App, SubPage);
+```
+
+### Simple merge without Reduxers
+
+```js
+// src/partials/SubPage.js
+
+class SubPage {
+    state = { currentAnimal: null  }
+
+    // See the autobind tool
+    addAnimalBindThis(animal) {
+        this.props.addAnimal(animal)
+    }
+
+    renderAnimal() {
+        return (
+            <section className="my_animals">
+                <button onClick={() => this.addAnimal(window.prompt())}>
+                    Add Animal
+                </button>
+                <ul>
+                    {this.props.animals.map(animal => <li>{ animal }</li>}
+                </ul>
+            </section>
+        )
+    }
+}
+
+export default new SubPage()
+```
+
+*And merge it inside the main component*
+
+```js
+// src/App.js
+
+import React from "react";
+
+import SubPage from './partials/SubPage'
+
+import { reactizy, withReactizy } from "reactizy";
 
 class App extends React.Component {
     constructor(props) {
