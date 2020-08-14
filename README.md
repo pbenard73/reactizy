@@ -83,6 +83,10 @@ ReactDOM.render(
 
 ##### Usage in Component
 
+*To connect with a component, you've to link an array containing two arrays, the first for the state properties, the second one for the actions*
+
+*There are two ways of bindings, one with static property inside the component, the second, in declaring directly inside the `withReactizy` high order component.*
+
 ```js
 import React from "react";
 
@@ -114,7 +118,7 @@ class App extends React.Component {
         this.state = { foo: 'bar' }
     }
 
-    static.reduxers = [ ["peopleNumber"], ["addPeople"] ]
+    static reduxers = [ ["peopleNumber"], ["addPeople"] ]
 
     render() {
         return (
