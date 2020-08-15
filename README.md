@@ -223,8 +223,6 @@ class App extends React.Component {
         this.state = { foo: 'bar' }
     }
 
-    static.reduxers = [ ["peopleNumber"], ["addPeople"] ]
-
     render() {
         return (
             <div className="App">
@@ -235,6 +233,8 @@ class App extends React.Component {
         );
     }
 }
+
+App.reduxers = [ ["peopleNumber"], ["addPeople"] ]
 
 export default withReactizy(App, SubPage);
 ```
@@ -289,8 +289,6 @@ class App extends React.Component {
         reactizy.call(this, SubPage)
     }
 
-    static.reduxers = [ ["peopleNumber"], ["addPeople"] ]
-
     render() {
         return (
             <div className="App">
@@ -301,6 +299,8 @@ class App extends React.Component {
         );
     }
 }
+
+App.reduxers = [ ["peopleNumber"], ["addPeople"] ]
 
 export default withReactizy(App);
 ```
