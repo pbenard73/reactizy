@@ -1,6 +1,6 @@
 {
   "name": "reactizy",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Reactizy is a toolkit allowing to simplify to use of react-redux and permitting to split *react component* in order to have a better readability, with some usefull utilities",
   "main": "./dist/index.js",
   "homepage": "https://github.com/pbenard73/reactizy",
