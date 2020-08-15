@@ -2,7 +2,6 @@ import each from "./each"
 
 export default function (extra = []) {
     const properties = Object.getOwnPropertyNames(this)
-        .concat(Object.getOwnPropertyNames(this.prototype))
         .concat(Object.getOwnPropertyNames(this.__proto__))
         .concat(extra)
 

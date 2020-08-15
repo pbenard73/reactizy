@@ -5,10 +5,11 @@ import autobind from "./autobind"
 
 export default function withReactify(WrappedComponent, ...parts) {
     const isClass = WrappedComponent.toString().indexOf("class") === 0
+    const wrappedProto = WrappedComponent.prototype === undefined ? [] : Object.getOwnPropertyNames(WrappedComponent.prototype)
 
     const baseProperties = Object.getOwnPropertyNames(WrappedComponent)
         .concat(Object.getOwnPropertyNames(WrappedComponent.__proto__))
-        .concat(Object.getOwnPropertyNames(WrappedComponent.prototype))
+        .concat(wrappedProto)
 
     let staticState = WrappedComponent.reduxers
 
