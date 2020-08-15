@@ -123,7 +123,6 @@ class App extends React.Component {
         this.state = { foo: 'bar' }
     }
 
-
     render() {
         return (
             <div className="App">
@@ -165,6 +164,8 @@ export default createStore(reduxer(peopleReducer, animalReducer))
 *The three methods need to be called at the end of the main component's constructor with : `fusion.call(this, // OnePartialComponent, AnotherOne, AndAnotherOne)`*
 
 In order to merge a full partial component (reduxers, state, methods) you need to use the HOC `withReactizy`
+
+**Nb :** *If the component is not extending `React.Component`, the properties of partials won't be merged, only the reduxers. It's not recommended to merge partials on a single function* 
 
 ### Full merge with Reduxers
 
@@ -343,6 +344,5 @@ class Page extends React.Component {
     }
 }
 
+export default Page
 ```
-
-

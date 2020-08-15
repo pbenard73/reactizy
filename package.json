@@ -16,7 +16,7 @@
     "architecture",
     "simplify"
   ],
-  "author": "BENARD Patrick <p.benard73@gmail.com>",
+  "author": "BENARD Patrick <pbenard73@gmail.com>",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.11.1",

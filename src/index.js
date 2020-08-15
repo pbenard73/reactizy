@@ -1,12 +1,11 @@
 import SrcStore from "./Store"
 import src_autobind from "./autobind"
 import src_fusion from "./fusion"
-import fusionBind from "./fusionBind"
 import highOrderComponent from "./highOrderComponent"
 import src_reduxer from "./reduxer"
 import store from "./store"
 
-export const reactizy = fusionBind
+export const reactizy = function(...args) { src_fusion.call(this, ...args); src_autobind.call(this)}
 
 export const autobind = src_autobind
 

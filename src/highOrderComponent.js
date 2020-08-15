@@ -3,63 +3,55 @@ import { connect } from "react-redux"
 import each from "./each"
 import autobind from "./autobind"
 
-export default function withReactizy(WrappedComponent, ...parts) {
+export default function withReactify(WrappedComponent, ...parts) {
+    const isClass = WrappedComponent.toString().indexOf("class") === 0
+
     let staticState = WrappedComponent.reduxers
 
-    staticState = staticState === undefined ? [[], []] : staticState
+    const isArray = item =>
+        [null, undefined].indexOf(staticState) === -1 && staticState.constructor.name.toLowerCase() === "array"
 
-    if (staticState[1] === undefined) {
-        staticState = [staticState[0], []]
+    staticState = isArray(staticState) === false || staticState.length === 0 ? [[], []] : staticState
+
+    let pooler = {
+        wantedStateProperties: isArray(staticState[0]) === false ? [] : staticState[0],
+    wantedActions: staticState.length > 1 && isArray(staticState[1]) === true ? staticState[1] : []
     }
-
-    let wantedStateProperties = []
-    wantedStateProperties = wantedStateProperties.concat(staticState[0])
-
-    let wantedActions = []
-    wantedActions = wantedActions.concat(staticState[1])
 
     let newState = {}
     let newMethods = {}
 
     each(parts, part => {
-        const properties = Object.getOwnPropertyNames(part).concat(Object.getOwnPropertyNames(part.__proto__))
-
         if (part.reduxers !== undefined) {
-            let state = part.reduxers[0]
-            state = state === undefined ? [] : state
-            state = state.filter(item => wantedStateProperties.indexOf(item) === -1)
-            wantedStateProperties = [...wantedStateProperties, ...state]
-
-            let actions = part.reduxers[1]
-            actions = actions === undefined ? [] : actions
-            actions = actions.filter(item => wantedActions.indexOf(item) === -1)
-            wantedActions = [...wantedActions, ...actions]
+            each(['wantedStateProperties', 'wantedActions'], (pool, i) => {
+                let partialPool = part.reduxers[i]
+                partialPool = partialPool === undefined ? [] : partialPool.filter(item => pooler[pool].indexOf(item) === -1)
+                pooler[pool] = [...pooler[pool], ...partialPool]
+            })
         }
 
-        each(properties, property => {
-            if (property === "constructor") {
-                return
-            }
+        if (isClass === true) {
+            const properties = Object.getOwnPropertyNames(part).concat(Object.getOwnPropertyNames(part.__proto__))
 
-            if (property === "reduxers") {
-                return
-            }
+            each(properties, property => {
+                if (["constructor", "reduxers"].indexOf(property) !== -1) {
+                    return
+                }
 
-            if (property === "state") {
-                const state = part.state
+                if (property === "state") {
+                    newState = { ...newState, ...part.state }
 
-                newState = { ...newState, ...state }
+                    return
+                }
 
-                return
-            }
-
-            newMethods[property] = part[property]
-        })
+                newMethods[property] = part[property]
+            })
+        }
     })
 
     let myComponent = WrappedComponent
 
-    if (WrappedComponent.toString().indexOf("class") === 0) {
+    if (isClass === true) {
         myComponent = class Extended extends WrappedComponent {
             constructor(props) {
                 super(props)
@@ -77,7 +69,7 @@ export default function withReactizy(WrappedComponent, ...parts) {
     const mapStateToProps = state => {
         let properties = {}
 
-        each(wantedStateProperties, property => {
+        each(pooler.wantedStateProperties, property => {
             properties[property] = state[property]
         })
 
@@ -86,11 +78,13 @@ export default function withReactizy(WrappedComponent, ...parts) {
 
     const mapActionsToProps = {}
 
-    each(wantedActions, action => {
+    each(pooler.wantedActions, action => {
         mapActionsToProps[action] = payload => {
             return { type: action, payload }
         }
     })
 
-    return connect(mapStateToProps, mapActionsToProps)(myComponent)
+    let Component = connect(mapStateToProps, mapActionsToProps)(myComponent)
+
+    return Component
 }
