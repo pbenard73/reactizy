@@ -6,6 +6,10 @@ import autobind from "./autobind"
 export default function withReactify(WrappedComponent, ...parts) {
     const isClass = WrappedComponent.toString().indexOf("class") === 0
 
+    const baseProperties = Object.getOwnPropertyNames(WrappedComponent)
+        .concat(Object.getOwnPropertyNames(WrappedComponent.__proto__))
+        .concat(Object.getOwnPropertyNames(WrappedComponent.prototype))
+
     let staticState = WrappedComponent.reduxers
 
     const isArray = item =>
@@ -15,7 +19,7 @@ export default function withReactify(WrappedComponent, ...parts) {
 
     let pooler = {
         wantedStateProperties: isArray(staticState[0]) === false ? [] : staticState[0],
-    wantedActions: staticState.length > 1 && isArray(staticState[1]) === true ? staticState[1] : []
+        wantedActions: staticState.length > 1 && isArray(staticState[1]) === true ? staticState[1] : [],
     }
 
     let newState = {}
@@ -23,7 +27,7 @@ export default function withReactify(WrappedComponent, ...parts) {
 
     each(parts, part => {
         if (part.reduxers !== undefined) {
-            each(['wantedStateProperties', 'wantedActions'], (pool, i) => {
+            each(["wantedStateProperties", "wantedActions"], (pool, i) => {
                 let partialPool = part.reduxers[i]
                 partialPool = partialPool === undefined ? [] : partialPool.filter(item => pooler[pool].indexOf(item) === -1)
                 pooler[pool] = [...pooler[pool], ...partialPool]
@@ -61,7 +65,7 @@ export default function withReactify(WrappedComponent, ...parts) {
                     this[methodName] = newMethods[methodName]
                 })
 
-                autobind.call(this)
+                autobind.call(this, baseProperties)
             }
         }
     }

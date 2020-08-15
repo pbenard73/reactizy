@@ -1,7 +1,10 @@
 import each from "./each"
 
-export default function () {
-    const properties = Object.getOwnPropertyNames(this).concat(Object.getOwnPropertyNames(this.__proto__))
+export default function (extra = []) {
+    const properties = Object.getOwnPropertyNames(this)
+        .concat(Object.getOwnPropertyNames(this.prototype))
+        .concat(Object.getOwnPropertyNames(this.__proto__))
+        .concat(extra)
 
     each(properties, property => {
         const suffix = "BindThis"
@@ -9,6 +12,7 @@ export default function () {
 
         if (property.indexOf(suffix) === index && index > 0) {
             const cleanName = property.replace(suffix, "")
+
             this[cleanName] = this[property].bind(this)
         }
     })
