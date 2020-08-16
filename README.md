@@ -2,7 +2,7 @@
 
 ## Description
 
-**Reactizy** is a toolkit allowing to simplify to use of *react-redux* and permitting to split *react component* in order to have a better readability, with some usefull utilities
+**Reactizy** is a toolkit allowing to simplify the use of *react-redux* and permitting to split *react component* in order to have a better readability, with some usefull utilities
 
 ## Summary
 * [Installation](#installation)
@@ -106,7 +106,7 @@ function App(props) {
     );  
 }     
     
-App.reduxers = [ ["peopleNumber"], ["addPeople"] ]
+App.reduxers = [ ["peopleNumber"], ["addPerson"] ]
 
 export default withReactizy(App);
 ```
