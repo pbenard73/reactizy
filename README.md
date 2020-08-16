@@ -336,13 +336,15 @@ class Page extends React.Component {
     }
 
     render() {
-        <section className="page">
-            <form onSubmit={this.onSubmit}>
-                // rest of the form
-            </form>
+        return (
+            <section className="page">
+                <form onSubmit={this.onSubmit}>
+                    // rest of the form
+                </form>
 
-            <button onClick={this.onClick}>Click me<button>
-        </section>
+                <button onClick={this.onClick}>Click me<button>
+            </section>
+        )
     }
 }
 
