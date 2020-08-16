@@ -4,6 +4,8 @@
 
 **Reactizy** is a toolkit allowing to simplify the use of *react-redux* and permitting to split *react component* in order to have a better readability, with some usefull utilities
 
+[Youtube Video Intro](https://www.youtube.com/watch?v=P7mFkRVYEuM)
+
 ## Summary
 * [Installation](#installation)
 * [Usage](#usage)
