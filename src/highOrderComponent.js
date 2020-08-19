@@ -1,11 +1,15 @@
+import React from "react"
+
 import { connect } from "react-redux"
 
 import each from "./each"
 import autobind from "./autobind"
+import Context from "./Context"
 
 export default function withReactify(WrappedComponent, ...parts) {
     const isClass = WrappedComponent.toString().indexOf("class") === 0
-    const wrappedProto = WrappedComponent.prototype === undefined ? [] : Object.getOwnPropertyNames(WrappedComponent.prototype)
+    const wrappedProto =
+        WrappedComponent.prototype === undefined ? [] : Object.getOwnPropertyNames(WrappedComponent.prototype)
 
     const baseProperties = Object.getOwnPropertyNames(WrappedComponent)
         .concat(Object.getOwnPropertyNames(WrappedComponent.__proto__))
@@ -90,6 +94,35 @@ export default function withReactify(WrappedComponent, ...parts) {
     })
 
     let Component = connect(mapStateToProps, mapActionsToProps)(myComponent)
+
+    console.log("before", Component)
+
+    console.log(Context)
+
+    if (WrappedComponent.use !== undefined) {
+        const MyHoc = () => {
+            const HOC = (props, forwardedRef) => (
+                <Context.Consumer>
+                    {value => {
+                        console.log('VALUE OF CONTEXT', value)
+                        each(WrappedComponent.use, hoc => {
+                            const Hoc = value[hoc]
+
+                            if (Hoc !== undefined) {
+                                Component = Hoc(Component)
+                            }
+                        })
+
+                        return <Component {...props} ref={forwardedRef} />
+                    }}
+                </Context.Consumer>
+            )
+
+            return React.forwardRef(HOC)
+        }
+
+        return MyHoc(Component)
+    }
 
     return Component
 }
