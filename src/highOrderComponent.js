@@ -4,6 +4,7 @@ import { connect } from "react-redux"
 
 import each from "./each"
 import autobind from "./autobind"
+import AsyncContext from "./AsyncContext"
 import Context from "./Context"
 
 export default function withReactify(WrappedComponent, ...parts) {
@@ -86,25 +87,66 @@ export default function withReactify(WrappedComponent, ...parts) {
     }
 
     const mapActionsToProps = {}
+    const suffix = "Async"
+    const hasAsync = false
 
     each(pooler.wantedActions, action => {
-        mapActionsToProps[action] = payload => {
+        const index = action.indexOf(suffix)
+        let name = index < 1 ? action : `${action}_inner_redux`
+
+        mapActionsToProps[name] = payload => {
             return { type: action, payload }
         }
     })
 
-    let Component = connect(mapStateToProps, mapActionsToProps)(myComponent)
+    const MyAsyncHoc = GivenComponent => {
+        return class extends React.Component {
+            constructor(props) {
+                super(props)
+            }
 
-    console.log("before", Component)
+            render() {
+                return (
+                    <AsyncContext.Consumer>
+                        {value => {
+                            let data = {}
 
-    console.log(Context)
+                            each(Object.keys(value), actionName => {
+                                if (pooler.wantedActions.indexOf(actionName) === -1) {
+                                    return
+                                }
+
+                                data[actionName] = (...args) =>
+                                    new Promise((resolve, reject) => {
+                                        value[actionName](...args)
+                                            .then(payload => {
+                                                const type = `${actionName}_inner_redux`
+
+                                                this.props[type](payload)
+
+                                                resolve(true)
+                                            })
+                                            .catch(error => reject(error))
+                                    })
+                            })
+
+                            return <GivenComponent {...this.props} {...data} />
+                        }}
+                    </AsyncContext.Consumer>
+                )
+            }
+        }
+    }
+
+    let Component = MyAsyncHoc(myComponent)
+
+    Component = connect(mapStateToProps, mapActionsToProps)(Component)
 
     if (WrappedComponent.use !== undefined) {
         const MyHoc = () => {
             const HOC = (props, forwardedRef) => (
                 <Context.Consumer>
                     {value => {
-                        console.log('VALUE OF CONTEXT', value)
                         each(WrappedComponent.use, hoc => {
                             const Hoc = value[hoc]
 
