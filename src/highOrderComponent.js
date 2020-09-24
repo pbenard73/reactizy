@@ -8,8 +8,13 @@ import AsyncContext from "./AsyncContext"
 import Context from "./Context"
 
 export default function withReactify(WrappedComponent, ...parts) {
-    let isClass = WrappedComponent.prototype !== undefined && WrappedComponent.prototype.componentDidMount !== undefined
-    const wrappedProto =
+    let isClass = WrappedComponent.prototype !== undefined && Object.keys(WrappedComponent.prototype).length > 2
+
+    if (isClass === false) {
+        isClass = WrappedComponent.toString().indexOf("class") === 0
+    }
+
+    const wrappedProto = 
         WrappedComponent.prototype === undefined ? [] : Object.getOwnPropertyNames(WrappedComponent.prototype)
 
     const baseProperties = Object.getOwnPropertyNames(WrappedComponent)
