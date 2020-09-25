@@ -9,7 +9,7 @@ export default props => {
         api = {...api, ...apiPool}
     })
 
-    const hocs = props.value !== undefined ? {} : props.value
+    const hocs = props.value !== undefined ? props.value : {}
     
     const value = {hocs, api}
 

@@ -170,7 +170,8 @@ export default function withReactify(WrappedComponent, ...parts) {
             <Context.Consumer>
                 {value => {
                     each(uses, hoc => {
-                        const Hoc = value[hoc]
+                        const Hoc = value.hocs[hoc]
+                        console.log(hoc, value.hocs, Hoc)
 
                         if (Hoc !== undefined) {
                             Component = Hoc(Component)
@@ -182,9 +183,9 @@ export default function withReactify(WrappedComponent, ...parts) {
                     if (Object.keys(value.api).length !== 0) {
                         apiProps = {
                             api: {
-                        call: apiFunctions(value),
-                        url: apiFunctions(value, true),
-                            }
+                                call: apiFunctions(value),
+                                url: apiFunctions(value, true),
+                            },
                         }
                     }
 
