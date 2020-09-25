@@ -8,7 +8,7 @@ import AsyncContext from "./AsyncContext"
 import Context from "./Context"
 
 export default function withReactify(WrappedComponent, ...parts) {
-    let isClass = WrappedComponent.prototype !== undefined && Object.keys(WrappedComponent.prototype).length > 2
+    let isClass = WrappedComponent.prototype !== undefined && WrappedComponent.prototype.__proto__ !== undefined && WrappedComponent.prototype.__proto__.isReactComponent !== undefined
 
     if (isClass === false) {
         isClass = WrappedComponent.toString().indexOf("class") === 0
