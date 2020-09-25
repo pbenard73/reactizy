@@ -11,7 +11,7 @@ import reduxer from "./reduxer"
 export default props => {
     const extra = reduxer(...props.reduxers, true)
 
-    if (props.uses === undefined) {
+    if (props.uses === undefined && props.apis === undefined) {
         return (
             <Provider store={store(...props.reduxers)}>
                 <AsyncProvider value={extra}>{props.children}</AsyncProvider>
@@ -21,7 +21,7 @@ export default props => {
 
     return (
         <Provider store={store(...props.reduxers)}>
-            <ReactizyProvider value={props.uses}>
+            <ReactizyProvider value={props.uses} apis={props.apis}>
                 <AsyncProvider value={extra}>{props.children}</AsyncProvider>
             </ReactizyProvider>
         </Provider>

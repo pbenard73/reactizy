@@ -6,15 +6,19 @@ import each from "./each"
 import autobind from "./autobind"
 import AsyncContext from "./AsyncContext"
 import Context from "./Context"
+import Api from "./Api"
 
 export default function withReactify(WrappedComponent, ...parts) {
-    let isClass = WrappedComponent.prototype !== undefined && WrappedComponent.prototype.__proto__ !== undefined && WrappedComponent.prototype.__proto__.isReactComponent !== undefined
+    let isClass =
+        WrappedComponent.prototype !== undefined &&
+        WrappedComponent.prototype.__proto__ !== undefined &&
+        WrappedComponent.prototype.__proto__.isReactComponent !== undefined
 
     if (isClass === false) {
         isClass = WrappedComponent.toString().indexOf("class") === 0
     }
 
-    const wrappedProto = 
+    const wrappedProto =
         WrappedComponent.prototype === undefined ? [] : Object.getOwnPropertyNames(WrappedComponent.prototype)
 
     const baseProperties = Object.getOwnPropertyNames(WrappedComponent)
@@ -147,29 +151,50 @@ export default function withReactify(WrappedComponent, ...parts) {
 
     Component = connect(mapStateToProps, mapActionsToProps)(Component)
 
-    if (WrappedComponent.use !== undefined) {
-        const MyHoc = () => {
-            const HOC = (props, forwardedRef) => (
-                <Context.Consumer>
-                    {value => {
-                        each(WrappedComponent.use, hoc => {
-                            const Hoc = value[hoc]
+    const apiFunctions = (context, url = false) => {
+        return (routeName, ...args) => {
+            let route = context.api[routeName]
 
-                            if (Hoc !== undefined) {
-                                Component = Hoc(Component)
-                            }
-                        })
+            if (route === undefined) {
+                return new Error(`Api route ${routeName} is not registered`)
+            }
 
-                        return <Component {...props} ref={forwardedRef} />
-                    }}
-                </Context.Consumer>
-            )
-
-            return React.forwardRef(HOC)
+            return url === false ? Api.call(route, ...args) : Api.url(route, ...args)
         }
-
-        return MyHoc(Component)
     }
 
-    return Component
+    const uses = WrappedComponent.use !== undefined ? WrappedComponent.use : []
+
+    const MyHoc = () => {
+        const HOC = (props, forwardedRef) => (
+            <Context.Consumer>
+                {value => {
+                    each(uses, hoc => {
+                        const Hoc = value[hoc]
+
+                        if (Hoc !== undefined) {
+                            Component = Hoc(Component)
+                        }
+                    })
+
+                    let apiProps = {}
+
+                    if (Object.keys(value.api).length !== 0) {
+                        apiProps = {
+                            api: {
+                        call: apiFunctions(value),
+                        url: apiFunctions(value, true),
+                            }
+                        }
+                    }
+
+                    return <Component {...props} {...apiProps} ref={forwardedRef} />
+                }}
+            </Context.Consumer>
+        )
+
+        return React.forwardRef(HOC)
+    }
+
+    return MyHoc(Component)
 }
