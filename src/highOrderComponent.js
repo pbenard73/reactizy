@@ -171,7 +171,6 @@ export default function withReactify(WrappedComponent, ...parts) {
                 {value => {
                     each(uses, hoc => {
                         const Hoc = value.hocs[hoc]
-                        console.log(hoc, value.hocs, Hoc)
 
                         if (Hoc !== undefined) {
                             Component = Hoc(Component)
