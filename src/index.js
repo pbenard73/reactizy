@@ -4,7 +4,7 @@ import src_domainize from "./domainize"
 import src_fusion from "./fusion"
 import highOrderComponent from "./highOrderComponent"
 import src_reduxer from "./reduxer"
-import store from "./store"
+import store from "./createStore"
 import src_hocBuilder from './hocBuilder'
 import map from './map'
 
