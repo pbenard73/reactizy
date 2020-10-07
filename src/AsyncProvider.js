@@ -2,8 +2,13 @@ import React from "react"
 
 import Context from "./AsyncContext"
 
-import each from "./each"
+import PropTypes from "prop-types"
 
-import { connect } from "react-redux"
+const Provider = props => <Context.Provider value={props.value}>{props.children}</Context.Provider>
 
-export default props => <Context.Provider value={props.value}>{props.children}</Context.Provider>
+Provider.propTypes = {
+    value: PropTypes.array,
+    children: PropTypes.array
+}
+
+export default Provider

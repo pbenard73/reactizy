@@ -4,7 +4,14 @@ export const domainize: (domain: any, apiPool: any) => {};
 export const fusion: typeof src_fusion;
 export const withReactizy: typeof highOrderComponent;
 export const reduxer: typeof src_reduxer;
-export const Store: (props: any) => any;
+export const Store: {
+    (props: any): any;
+    propTypes: {
+        reduxers: any;
+        apis: any;
+        children: any;
+    };
+};
 export const createStore: (...args: any[]) => any;
 export const hocBuilder: (pool: any) => (...args: any[]) => (Component: any, ...fusion: any[]) => any;
 import src_autobind from "./autobind";

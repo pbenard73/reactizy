@@ -1,7 +1,6 @@
 import React from "react"
 
 import { connect } from "react-redux"
-import { compose } from "redux"
 
 import each from "./each"
 import autobind from "./autobind"
@@ -29,7 +28,7 @@ export default function withReactify(WrappedComponent, ...parts) {
     let staticState = WrappedComponent.reduxers
 
     const isArray = item =>
-        [null, undefined].indexOf(staticState) === -1 && staticState.constructor.name.toLowerCase() === "array"
+        [null, undefined].indexOf(item) === -1 && item.constructor.name.toLowerCase() === "array"
 
     staticState = isArray(staticState) === false || staticState.length === 0 ? [[], []] : staticState
 
@@ -98,7 +97,6 @@ export default function withReactify(WrappedComponent, ...parts) {
 
     const mapActionsToProps = {}
     const suffix = "Async"
-    const hasAsync = false
 
     each(pooler.wantedActions, action => {
         const index = action.indexOf(suffix)
@@ -110,7 +108,7 @@ export default function withReactify(WrappedComponent, ...parts) {
     })
 
     const MyAsyncHoc = GivenComponent => {
-        return class extends React.Component {
+        return class MyHoc extends React.Component {
             constructor(props) {
                 super(props)
             }

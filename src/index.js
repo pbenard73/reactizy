@@ -5,8 +5,7 @@ import src_fusion from "./fusion"
 import highOrderComponent from "./highOrderComponent"
 import src_reduxer from "./reduxer"
 import store from "./createStore"
-import src_hocBuilder from './hocBuilder'
-import map from './map'
+import src_hocBuilder from "./hocBuilder"
 
 export const reactizy = function(...args) { src_fusion.call(this, ...args); src_autobind.call(this)}
 

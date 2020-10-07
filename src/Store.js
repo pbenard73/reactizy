@@ -1,14 +1,16 @@
 import React from "react"
 
-import store from "./store"
+import store from "./createStore"
 
 import { Provider } from "react-redux"
+
+import PropTypes from "prop-types"
 
 import ReactizyProvider from "./Provider"
 import AsyncProvider from "./AsyncProvider"
 import reduxer from "./reduxer"
 
-export default props => {
+const Store = props => {
     const extra = reduxer(...props.reduxers, true)
 
     if (props.apis === undefined) {
@@ -27,3 +29,11 @@ export default props => {
         </Provider>
     )
 }
+
+Store.propTypes = {
+    reduxers: PropTypes.array,
+    apis: PropTypes.array,
+    children: PropTypes.array,
+}
+
+export default Store

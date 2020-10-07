@@ -1,8 +1,9 @@
 import React from "react"
-import each from './each'
+import each from "./each"
 import Context from "./Context"
+import PropTypes from "prop-types"
 
-export default props => {
+const Provider = props => {
     let api = {}
 
     each(props.apis !== undefined ? props.apis : [], apiPool => {
@@ -11,4 +12,11 @@ export default props => {
 
     return <Context.Provider value={{api}}>{props.children}</Context.Provider>
 }
+
+Provider.propTypes = {
+    apis: PropTypes.array,
+    children: PropTypes.array
+}
+
+export default Provider
 

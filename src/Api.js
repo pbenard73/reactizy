@@ -2,7 +2,7 @@ import axios from "axios"
 
 class Api {
     url(route, options = {}) {
-        if (typeof route === 'string') {
+        if (typeof route === "string") {
             return route
         }
 

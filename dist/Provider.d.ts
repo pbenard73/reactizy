@@ -1,2 +1,8 @@
-declare function _default(props: any): any;
-export default _default;
+export default Provider;
+declare function Provider(props: any): any;
+declare namespace Provider {
+    namespace propTypes {
+        const apis: any;
+        const children: any;
+    }
+}

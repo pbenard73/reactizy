@@ -1,4 +1,4 @@
-import each from './each'
+import each from "./each"
 
 export default (domain, apiPool) => {
     let pool = {}
