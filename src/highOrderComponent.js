@@ -1,6 +1,7 @@
 import React from "react"
 
 import { connect } from "react-redux"
+import { compose } from "redux"
 
 import each from "./each"
 import autobind from "./autobind"
@@ -163,23 +164,12 @@ export default function withReactify(WrappedComponent, ...parts) {
         }
     }
 
-    const uses = WrappedComponent.use !== undefined ? WrappedComponent.use : []
-
     const MyHoc = () => {
         const HOC = (props, forwardedRef) => (
             <Context.Consumer>
                 {value => {
-                    each(uses, hoc => {
-                        const Hoc = value.hocs[hoc]
-
-                        if (Hoc !== undefined) {
-                            Component = Hoc(Component)
-                        }
-                    })
-
                     let apiProps = {}
-
-                    if (Object.keys(value.api).length !== 0) {
+                    if ([null, undefined].indexOf(value) === -1 && value.api.length !== 0) {
                         apiProps = {
                             api: {
                                 call: apiFunctions(value),

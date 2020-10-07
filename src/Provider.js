@@ -9,10 +9,6 @@ export default props => {
         api = {...api, ...apiPool}
     })
 
-    const hocs = props.value !== undefined ? props.value : {}
-    
-    const value = {hocs, api}
-
-    return <Context.Provider value={value}>{props.children}</Context.Provider>
+    return <Context.Provider value={{api}}>{props.children}</Context.Provider>
 }
 
