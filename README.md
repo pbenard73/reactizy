@@ -1,41 +1,44 @@
 # Reactizy
 
+ [Documentation https://pbenard73.github.io/reactizy/](https://pbenard73.github.io/reactizy/)
+
 ## Description
 
-**Reactizy** is a toolkit allowing to simplify the use of *react-redux* and permitting to split *react component* in order to have a better readability, with some usefull utilities
+**Reactizy**  is a React High Order Component and a toolkit allowing to
 
-[Youtube Video Intro](https://www.youtube.com/watch?v=P7mFkRVYEuM)
+* Simplify to use of react-redux
+* Providing asynchronous reducers
+* Split react components in order to have a better readability
+* Call api with simply library
+... and some usefull utilities.
 
-## Summary
-* [Installation](#installation)
-* [Usage](#usage)
-    * [Using Redux and Reducers](#using-redux-and-reducers)
-        * [Store and Reduxers Creation](#store-and-reduxers-creation)
-            * [Reducers Creation](#reducers-creation)
-            * [Store Creation](#store-creation)
-            * [Usage in Component](#usage-in-component)
-        * [Custom Store with Reactizy Reduxers](#custom-store-with-reactizy-reduxers)
-    * [React Component Spliting](#react-component-spliting)
-        * [Full merge with Reduxers](#full-merge-with-reduxers)
-        * [Simple merge without Reduxers](#simple-merge-without-reduxers)
-    * [Autobind React Methods](#autobind-react-methods)
+## Get Started
 
-## Installation
+### Create your High Order Component
 
-`npm install reactizy`
+Register here your wanted HOC with their shortname. Be careful of unicity of the shortnames. It shouldn't be present in the reduxers pool and actions.
 
-## Usage
-
-### Using Redux and Reducers
-
-#### Store and Reduxers Creation
-
-##### Reducers creation
-
-* A reduxer is a simple class with a state property correponding to an initial state, and an actions property correponding to an object as key => value, alias methodName => method*
+Here is an example with `withRouter` from `react-router-dom` and `withAlert` from `react-alert` packages.
 
 ```js
-// src/reduxers/people.js
+/* src/hocs/Hoc.js*/
+import { hocBuilder } from 'reactizy'
+
+import { withRouter } from 'react-dom-router'
+import { withAlert } from 'react-alert'
+
+export default hocBuilder({
+    alert: withAlert(),
+    router: withRouter
+})
+```
+
+### Create the reduxers
+
+Register the reduxers you need to use
+
+```js
+/* src/reduxers/people.js*/
 class PeopleReducer {
     state = {
         peopleNumber: 0
@@ -43,7 +46,10 @@ class PeopleReducer {
 
     actions: {
         addPerson: state => { return { ...state, peopleNumber: state.peopleNumber + 1 }},
-        setPeopleNumber: (state, peopleNumber) => return { ...state, peopleNumber}}
+        setPeopleNumber: (state, peopleNumber) => return { ...state, peopleNumber}},
+        updatePeopleAsync: (...args) => new Promise((resolve, reject) => {
+            resolve({peopleNumber: 10})
+        })        
     }
 }
 
@@ -65,288 +71,78 @@ class AnimalReducer {
 export default new AnimalReducer()
 ```
 
-##### Store Creation
+### Create your Api routing files
+
+```js
+/* src/api/main.js*/
+export default {
+    mainRoute: {path:'/my_main_route'},
+    postRoute: {path:'/my_post_route'},
+    customDomain: {path:'/my_other_route', domain:'http://mydomain.com'}, 
+    paramRoute: {path:'/my_other_route/:myParam', domain:'http://mydomain.com'},
+}
+```
+
+### Implement you application
 
 ```js
 // src/index.js
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import * as serviceWorker from './serviceWorker';
 
 import { Store } from 'reactizy'
-
+import mainApi from './api/main'
 import people from './reduxers/people'
 import animals from './reduxers/animals'
 
 ReactDOM.render(
   <React.StrictMode>
-    <Store reduxers={[people, animal]} >
+    <Store reduxers={[people, animal]} apis={[mainApi]}>
     <App />
     </Store>
   </React.StrictMode>,
   document.getElementById('root')
 );
-
 ```
 
-##### Usage in Component
-
-*To connect with a component, you've to link an array containing two arrays, the first for the state properties, the second one for the actions*
+### Use in Component
 
 ```js
 import React from "react";
 
-import { withReactizy } from "reactizy";
+import { Hoc } from "./hocs/Hoc";
 
-function App(props) {
-    return (
-        <div className="App">
-            <p> There are {props.peopleNumber} people </p>
-            <button onClick={props.addPerson}>Add people</button>
-        </div>
-    );  
+class MyComponent extends React.Component {
+    addPersonBindThis() {
+        this.props.addPerson()
+    }
+
+    addMultiplePeopleBindThis() {
+        this.props.updatePeopleAsync()
+        .then(() => this.props.alert.success('Update Successfull'))
+        .catch(() => this.props.history.push('/'))
+    }
+
+    callApiBindThis() {
+        this.props.api.call('mainRoute')
+        .then(data => this.props.alert.success('Success'))
+        .catch(error => this.props.alert.error('Error occured'))
+    }
+
+    render {
+        return (
+            <div className="App">
+                <p> There are {this.props.peopleNumber} people </p>
+                <button onClick={this.addPerson}>Add people</button>
+                <button onClick={this.addMultiplePeople}>Update People</button>
+            </div>
+        )
+    }
 }     
-    
-App.reduxers = [ ["peopleNumber"], ["addPerson"] ]
 
-export default withReactizy(App);
-```
+const uses = ['alert', 'router']
+const reduxers = [ ["peopleNumber"], ["addPerson", "updatePeopleAsync"] ]
 
-```js
-import React from "react";
-
-import { withReactizy } from "reactizy";
-
-class App extends React.Component {
-    constructor(props) {
-        super(props)
-
-        this.state = { foo: 'bar' }
-    }
-
-    render() {
-        return (
-            <div className="App">
-                <p> There are {props.peopleNumber} people </p>
-                <button onClick={props.addPerson}>Add people</button>
-            </div>
-        );  
-    }
-}    
-
-App.reduxers = [ ["peopleNumber"], ["addPeople"] ]
-    
-export default withReactizy(App);
-
-```
-
-#### Custom Store with Reactizy Reduxers
-
-```js
-// src/store/main.js
-import { createStore } from 'react-redux'
-
-import { reduxer } from 'reactizy'
-
-import peopleReducer from './../reduxers/people'
-import animalReducer from './../reduxers/animals'
-
-export default createStore(reduxer(peopleReducer, animalReducer))
-```
-
-### React Component Spliting
-
-***fusion** and **reactizy** are tools to split a component into different parts and merge them*
-
-***fusion** do the merge of the partial component without the *autobind* utility*
-
-***reactizy** do the merge in addition of *autobind* utility.
-
-*The three methods need to be called at the end of the main component's constructor with : `fusion.call(this, // OnePartialComponent, AnotherOne, AndAnotherOne)`*
-
-In order to merge a full partial component (reduxers, state, methods) you need to use the HOC `withReactizy`
-
-**Nb :** *If the component is not extending `React.Component`, the properties of partials won't be merged, only the reduxers. It's not recommended to merge partials on a single function* 
-
-### Full merge with Reduxers
-
-*Let's create a partial component *
-
-*The `state` property will be merge inside the main component state*
-
-*If you need to link an redux property or actions, just use the `reduxers` property, an array with two array inside, the first listing the state properties, the second one, the actions*
-
-```js
-// src/partials/SubPage.js
-
-class SubPage {
-    state = { currentAnimal: null  }
-
-    reduxers = [ ['animals'], ['addAnimal'] ]
-
-    // See the autobind tool
-    addAnimalBindThis(animal) {
-        this.props.addAnimal(animal)
-    }
-
-    renderAnimal() {
-        return (
-            <section className="my_animals">
-                <button onClick={() => this.addAnimal(window.prompt())}>
-                    Add Animal
-                </button>
-                <ul>
-                    {this.props.animals.map(animal => <li>{ animal }</li>}
-                </ul>
-            </section>
-        )
-    }
-}
-
-export default new SubPage()
-```
-
-*And merge it inside the main component*
-
-```js
-// src/App.js
-
-import React from "react";
-
-import SubPage from './partials/SubPage'
-
-import { withReactizy } from "reactizy";
-
-class App extends React.Component {
-    constructor(props) {
-        super(props)
-
-        this.state = { foo: 'bar' }
-    }
-
-    render() {
-        return (
-            <div className="App">
-                <p> There are {props.peopleNumber} people </p>
-                <button onClick={props.addPerson}>Add people</button>
-                { this.renderAnimal()  }
-            </div>
-        );
-    }
-}
-
-App.reduxers = [ ["peopleNumber"], ["addPeople"] ]
-
-export default withReactizy(App, SubPage);
-```
-
-### Simple merge without Reduxers
-
-```js
-// src/partials/SubPage.js
-
-class SubPage {
-    state = { currentAnimal: null  }
-
-    // See the autobind tool
-    addAnimalBindThis(animal) {
-        this.props.addAnimal(animal)
-    }
-
-    renderAnimal() {
-        return (
-            <section className="my_animals">
-                <button onClick={() => this.addAnimal(window.prompt())}>
-                    Add Animal
-                </button>
-                <ul>
-                    {this.props.animals.map(animal => <li>{ animal }</li>}
-                </ul>
-            </section>
-        )
-    }
-}
-
-export default new SubPage()
-```
-
-*And merge it inside the main component*
-
-```js
-// src/App.js
-
-import React from "react";
-
-import SubPage from './partials/SubPage'
-
-import { reactizy, withReactizy } from "reactizy";
-
-class App extends React.Component {
-    constructor(props) {
-        super(props)
-
-        this.state = { foo: 'bar' }
-
-        reactizy.call(this, SubPage)
-    }
-
-    render() {
-        return (
-            <div className="App">
-                <p> There are {props.peopleNumber} people </p>
-                <button onClick={props.addPerson}>Add people</button>
-                { this.renderAnimal()  }
-            </div>
-        );
-    }
-}
-
-App.reduxers = [ ["peopleNumber"], ["addPeople"] ]
-
-export default withReactizy(App);
-```
-
-### Autobind React Methods
-
-*Tool to auto bind the methods*
-
-*The `autobind.call(this)` must be set at the end of the constructor*
-
-*When `reactizy` methods is used, the `autobind` method is automatically enabled*
-
-```js
-import React from 'react'
-
-import { autobind } from 'reactizy'
-
-class Page extends React.Component {
-    constructor(props) {
-        this.state = { foo: 'bar' }
-
-        autobind.call(this)
-    }
-
-    onClickBindThis() {
-        // do some stuff
-    }
-
-    onSubmitBindThis(e) {
-        // do some stuff
-    }
-
-    render() {
-        return (
-            <section className="page">
-                <form onSubmit={this.onSubmit}>
-                    // rest of the form
-                </form>
-
-                <button onClick={this.onClick}>Click me<button>
-            </section>
-        )
-    }
-}
-
-export default Page
+export default Hoc(uses, reduxers)(App)
 ```

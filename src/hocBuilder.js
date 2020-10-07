@@ -4,7 +4,7 @@ import { compose } from "redux"
 
 import withReactizy from "./highOrderComponent"
 
-export default pool => (...args) => {
+export default (pool = {}) => (...args) => {
     return (Component, ...fusion) => {
         if (args.length === 0) {
             return withReactizy(Component, ...fusion)
