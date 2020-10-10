@@ -1,6 +1,6 @@
 {
   "name": "reactizy",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "Reactizy is a React High Order Component and a toolkit allowing to simplify to use of react-redux, providing asynchronous reducers, permitting to split *react components* in order to have a better readability, call api with simply library and some usefull utilities.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -11,7 +11,7 @@
   },
   "scripts": {
     "build": "rm -rf ./dist; ./node_modules/webpack/bin/webpack.js && npx tsc",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "lint": "node_modules/eslint/bin/eslint.js --fix src/*"
   },
   "keywords": [
@@ -28,12 +28,18 @@
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.11.1",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/preset-env": "^7.11.5",
     "@babel/preset-react": "^7.10.4",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.0.4",
+    "babel-jest": "^26.5.2",
     "babel-loader": "^8.1.0",
     "clean-webpack-plugin": "^3.0.0",
     "eslint": "^7.10.0",
     "eslint-config-prettier": "^6.12.0",
     "eslint-plugin-react": "^7.21.3",
+    "jest": "^26.5.2",
     "react": "^16.13.1",
     "typescript": "^4.0.3",
     "webpack": "^4.44.1",
@@ -43,11 +49,16 @@
   "dependencies": {
     "axios": "^0.20.0",
     "prop-types": "^15.7.2",
+    "react-dom": "^16.13.1",
     "react-redux": "^7.2.1",
     "redux": "^4.0.5"
   },
   "babel": {
+    "plugins": [
+      "@babel/plugin-proposal-class-properties"
+    ],
     "presets": [
+      "@babel/preset-env",
       "@babel/preset-react"
     ]
   }

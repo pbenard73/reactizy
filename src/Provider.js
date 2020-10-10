@@ -15,7 +15,7 @@ const Provider = props => {
 
 Provider.propTypes = {
     apis: PropTypes.array,
-    children: PropTypes.array
+    children: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
 }
 
 export default Provider

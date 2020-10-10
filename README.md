@@ -1,3 +1,6 @@
+[![Codecov Coverage](https://img.shields.io/codecov/c/github/pbenard73/reactizy.svg?style=flat-square)](https://codecov.io/gh/pbenard73/reactizy/)
+
+
 # Reactizy
 
  [Documentation https://pbenard73.github.io/reactizy/](https://pbenard73.github.io/reactizy/)
@@ -111,7 +114,7 @@ ReactDOM.render(
 ```js
 import React from "react";
 
-import { Hoc } from "./hocs/Hoc";
+import Hoc from "./hocs/Hoc";
 
 class MyComponent extends React.Component {
     addPersonBindThis() {

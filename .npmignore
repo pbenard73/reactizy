@@ -1,5 +1,7 @@
 src/
 package-lock.json
 webpack.config.js
+coverage/
+test/
 .gitignore
 .prettierrc.json

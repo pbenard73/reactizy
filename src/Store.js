@@ -33,7 +33,7 @@ const Store = props => {
 Store.propTypes = {
     reduxers: PropTypes.array,
     apis: PropTypes.array,
-    children: PropTypes.array,
+    children: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
 }
 
 export default Store
