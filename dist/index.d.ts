@@ -13,8 +13,9 @@ export const Store: {
     };
 };
 export const createStore: (...args: any[]) => any;
-export const hocBuilder: (pool?: {}) => (...args: any[]) => (Component: any, ...fusion: any[]) => any;
+export const hocBuilder: typeof src_hocBuilder;
 import src_autobind from "./autobind";
 import src_fusion from "./fusion";
 import highOrderComponent from "./highOrderComponent";
 import src_reduxer from "./reduxer";
+import src_hocBuilder from "./hocBuilder";
