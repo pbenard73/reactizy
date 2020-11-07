@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const getUrl = (route, options = {}) => {
+function getUrl(route, options = {}) {
     if (typeof route === "string") {
         return route
     }
@@ -25,7 +25,7 @@ const getUrl = (route, options = {}) => {
     return routePath
 }
 
-const getRequestOptions = (route, options = {}, body = {}, givenExtraOptions = {}) => {
+function getRequestOptions(route, options = {}, body = {}, givenExtraOptions = {}) {
     const url = getUrl(route, options)
 
     var data = Object.assign(route.body !== undefined ? route.body : {}, body)

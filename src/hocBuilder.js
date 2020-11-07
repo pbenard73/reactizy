@@ -29,8 +29,6 @@ export default (pool = {}, buildable = {}) => (...args) => {
             return withReactizy(GivenComponent, ...fusion)
         }
 
-        let binders = []
-
         const getUses = givenArgs => {
             return map(args, item => {
                 if (pool[item] !== undefined) {
@@ -39,7 +37,6 @@ export default (pool = {}, buildable = {}) => (...args) => {
 
                 if (buildable[item] !== undefined) {
                     const buildableData = buildable[item]
-                    binders.push(item)
 
                     if (isArray(buildableData) === false) {
                         return hocCreator(item, buildable[item])
@@ -58,19 +55,14 @@ export default (pool = {}, buildable = {}) => (...args) => {
             })
         }
 
-        const bind = BaseComponent => {
-            BaseComponent.binders = binders
-            return BaseComponent
-        }
-
         if (isHocFirst === true && args.length === 1) {
-            return compose(...getUses(args))(withReactizy(bind(Component), ...fusion))
+            return compose(...getUses(args))(withReactizy(Component, ...fusion))
         }
 
         if (isHocFirst === true && args.length > 1) {
             let [use, ...rest] = args
 
-            return compose(...getUses(use))(checkReduxers(bind(Component), reduxerArgs(rest)))
+            return compose(...getUses(use))(checkReduxers(Component, reduxerArgs(rest)))
         }
 
         return checkReduxers(Component, reduxerArgs(args))
