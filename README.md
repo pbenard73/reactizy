@@ -33,6 +33,18 @@ import { withAlert } from 'react-alert'
 export default hocBuilder({
     alert: withAlert(),
     router: withRouter
+}, {
+    randomPeople: [
+        function() {
+             setTimeout(
+                this.props.setPeopleNumber( Math.floor(Math.random() * 10000)),
+                2000
+            )
+        },
+        [],
+        ['setPeopleNumber']
+    ],
+    prompt: (...args) => window.prompt(...args)
 })
 ```
 
@@ -137,6 +149,7 @@ class MyComponent extends React.Component {
         return (
             <div className="App">
                 <p> There are {this.props.peopleNumber} people </p>
+                <button onClick={this.props.randomPeople}>Random</button>
                 <button onClick={this.addPerson}>Add people</button>
                 <button onClick={this.addMultiplePeople}>Update People</button>
             </div>
@@ -144,7 +157,7 @@ class MyComponent extends React.Component {
     }
 }     
 
-const uses = ['alert', 'router']
+const uses = ['alert', 'router', 'randomPeople']
 const reduxers = [ ["peopleNumber"], ["addPerson", "updatePeopleAsync"] ]
 
 export default Hoc(uses, reduxers)(App)

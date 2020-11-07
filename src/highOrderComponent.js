@@ -111,6 +111,20 @@ export default function withReactify(WrappedComponent, ...parts) {
         return class MyHoc extends React.Component {
             constructor(props) {
                 super(props)
+
+                this.bindProps = {}
+
+                each(Object.keys(props), propName => {
+                    const suffix = "BindThis"
+                    const index = propName.length - suffix.length
+
+                    if (propName.indexOf(suffix) === index && index > 0) {
+                        const cleanName = propName.replace(suffix, "")
+
+                        this.bindProps[cleanName] = (...args) => this.props[propName].call(this, ...args)
+                    }
+                })
+
             }
 
             render() {
@@ -138,7 +152,7 @@ export default function withReactify(WrappedComponent, ...parts) {
                                     })
                             })
 
-                            return <GivenComponent {...this.props} {...data} />
+                            return <GivenComponent {...this.props} {...this.bindProps} {...data} />
                         }}
                     </AsyncContext.Consumer>
                 )

@@ -6,6 +6,7 @@ import highOrderComponent from "./highOrderComponent"
 import src_reduxer from "./reduxer"
 import store from "./createStore"
 import src_hocBuilder from "./hocBuilder"
+import src_hocCreator from "./hocCreator"
 
 export const reactizy = function(...args) { src_fusion.call(this, ...args); src_autobind.call(this)}
 
@@ -24,3 +25,6 @@ export const Store = SrcStore
 export const createStore = store
 
 export const hocBuilder = src_hocBuilder
+
+export const hocCreator = src_hocCreator
+

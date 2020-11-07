@@ -13,7 +13,8 @@ export const Store: {
     };
 };
 export const createStore: (...args: any[]) => any;
-export const hocBuilder: (pool?: {}) => (...args: any[]) => (Component: any, ...fusion: any[]) => any;
+export const hocBuilder: (pool?: {}, buildable?: {}) => (...args: any[]) => (Component: any, ...fusion: any[]) => any;
+export const hocCreator: (methodName: any, method: any) => (Component: any) => (props: any) => any;
 import src_autobind from "./autobind";
 import src_fusion from "./fusion";
 import highOrderComponent from "./highOrderComponent";

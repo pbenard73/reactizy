@@ -13,7 +13,10 @@ test('HocBuilder should return a function', () => {
     const HocEmpty = hocBuilder(poolEmpty)
     expect(typeof Hoc).toBe('function')
 
-    const HocFilled = hocBuilder(poolFilled)
+    const HocFilled = hocBuilder(poolFilled, {
+        method: type => alert(type),
+        another: [(test) => alert(test), ['state'], ['action']]
+    })
     expect(typeof Hoc).toBe('function')
 
     const MyComponent = props => (
@@ -32,7 +35,7 @@ test('HocBuilder should return a function', () => {
     const Empty = HocEmpty()(MyComponent)
     expect(typeof Empty).toBe('object')
 
-    const Filled = HocFilled(['test'])(MyComponent)
+    const Filled = HocFilled(['another', 'method', 'test'])(MyComponent)
     expect(typeof Filled).toBe('object')
 
     const FilledBis = HocFilled(['test'], ['param'], ['action'])(MyComponent)
