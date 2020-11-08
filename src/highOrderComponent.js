@@ -27,8 +27,7 @@ export default function withReactify(WrappedComponent, ...parts) {
 
     let staticState = WrappedComponent.reduxers
 
-    const isArray = item =>
-        [null, undefined].indexOf(item) === -1 && item.constructor.name.toLowerCase() === "array"
+    const isArray = item => [null, undefined].indexOf(item) === -1 && item.constructor.name.toLowerCase() === "array"
 
     staticState = isArray(staticState) === false || staticState.length === 0 ? [[], []] : staticState
 
@@ -113,7 +112,6 @@ export default function withReactify(WrappedComponent, ...parts) {
                 super(props)
 
                 this.bindProps = {}
-
                 each(Object.keys(props), propName => {
                     const suffix = "BindThis"
                     const index = propName.length - suffix.length
@@ -121,10 +119,13 @@ export default function withReactify(WrappedComponent, ...parts) {
                     if (propName.indexOf(suffix) === index && index > 0) {
                         const cleanName = propName.replace(suffix, "")
 
-                        this.bindProps[cleanName] = (...args) => this.props[propName].call(this, ...args)
+                        this.bindProps[cleanName] = (...args) => this.props[propName].call(this.getMyProps(), ...args)
                     }
                 })
+            }
 
+            getMyProps() {
+                return { props: { ...this.props, ...this.bindProps } }
             }
 
             render() {

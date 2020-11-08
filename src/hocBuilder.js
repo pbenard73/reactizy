@@ -29,30 +29,36 @@ export default (pool = {}, buildable = {}) => (...args) => {
             return withReactizy(GivenComponent, ...fusion)
         }
 
+        let extendedHocs = []
+
+        const parseUseItem = item => {
+            if (pool[item] !== undefined) {
+                return pool[item]
+            }
+
+            if (buildable[item] !== undefined) {
+                const buildableData = buildable[item]
+
+                if (isArray(buildableData) === false) {
+                    return hocCreator(item, buildable[item])
+                }
+
+                let [method, states = [], actions = [], hocs = []] = buildableData
+                usesReduxers = [
+                    [...usesReduxers[0], ...states],
+                    [...usesReduxers[1], ...actions],
+                ]
+
+                extendedHocs = [...extendedHocs, ...map(hocs, parseUseItem)]
+
+                return hocCreator(item, method)
+            }
+
+            return null
+        }
+
         const getUses = givenArgs => {
-            return map(args, item => {
-                if (pool[item] !== undefined) {
-                    return pool[item]
-                }
-
-                if (buildable[item] !== undefined) {
-                    const buildableData = buildable[item]
-
-                    if (isArray(buildableData) === false) {
-                        return hocCreator(item, buildable[item])
-                    }
-
-                    let [method, states = [], actions = []] = buildableData
-                    usesReduxers = [
-                        [...usesReduxers[0], ...states],
-                        [...usesReduxers[1], ...actions],
-                    ]
-
-                    return hocCreator(item, method)
-                }
-
-                return null
-            })
+            return [...map(givenArgs, parseUseItem), ...extendedHocs]
         }
 
         if (isHocFirst === true && args.length === 1) {
