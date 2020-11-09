@@ -36,7 +36,7 @@ test('HocBuilder should return a function', () => {
     expect(typeof Empty).toBe('object')
 
     const Filled = HocFilled(['another', 'method', 'test'])(MyComponent)
-    expect(typeof Filled).toBe('object')
+    expect(typeof Filled).toBe('function')
 
     const FilledBis = HocFilled(['test'], ['param'], ['action'])(MyComponent)
     expect(typeof FilledBis).toBe('object')

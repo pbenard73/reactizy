@@ -1,4 +1,4 @@
-import { reactizy, autobind, domainize, fusion, withReactizy, reduxer, Store, createStore, hocBuilder } from './../src/index'
+import { hocCreator, reactizy, autobind, domainize, fusion, withReactizy, reduxer, Store, createStore, hocBuilder } from './../src/index'
 
 
 test('Index: Each component should be exportable', () => {
@@ -11,5 +11,6 @@ test('Index: Each component should be exportable', () => {
     expect(typeof Store).toBe('function')
     expect(typeof createStore).toBe('function')
     expect(typeof hocBuilder).toBe('function')
+    expect(typeof hocCreator).toBe('function')
 });
 

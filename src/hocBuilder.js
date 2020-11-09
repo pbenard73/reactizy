@@ -20,7 +20,7 @@ export default (pool = {}, buildable = {}) => (...args) => {
 
         let usesReduxers = [[], []]
 
-        const checkReduxers = (GivenComponent, givenArgs) => {
+        const checkReduxers = (GivenComponent, givenArgs = [[]]) => {
             GivenComponent.reduxers = [
                 [...givenArgs[0], ...usesReduxers[0]],
                 givenArgs[1] !== undefined ? [...givenArgs[1], ...usesReduxers[1]] : usesReduxers[1],
@@ -62,7 +62,7 @@ export default (pool = {}, buildable = {}) => (...args) => {
         }
 
         if (isHocFirst === true && args.length === 1) {
-            return compose(...getUses(args))(withReactizy(Component, ...fusion))
+            return compose(...getUses(args[0]))(checkReduxers(Component))
         }
 
         if (isHocFirst === true && args.length > 1) {
