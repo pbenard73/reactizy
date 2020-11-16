@@ -11,7 +11,7 @@ const Component = props => <div></div>
 class Compo extends React.Component {
     componentDidMount() {
         act(() => {
-            this.props.setNewName('my new name')
+            this.props.call('setNewName', 'my new name')
         })
     }
     render() {
@@ -24,7 +24,7 @@ Compo.reduxers = [[], ["notValid"]]
 class Full extends React.Component {
     componentDidMount() {
         act(() => {
-            this.props.setName("my new name")
+            this.props.call('setName', "my new name")
         })
     }
 
@@ -35,7 +35,7 @@ class Full extends React.Component {
 
 const Sub = new (class {
     state = { subject: "mySubject" }
-    reduxers = [["name"], ["setName", "setNewName", "notValidAction"]]
+    reduxers = ["name"]
 
     renderSubject() {
         return <span>{this.state.subject}</span>

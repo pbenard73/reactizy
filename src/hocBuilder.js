@@ -1,30 +1,67 @@
 import map from "./map"
+import each from "./each"
 
 import { compose } from "redux"
 
 import withReactizy from "./highOrderComponent"
 import hocCreator from "./hocCreator"
 
-export default (pool = {}, buildable = {}) => (...args) => {
+export default (pool = {}, buildable = {}, thunks = {}, options = {name: 'call'}) => (...args) => {
     const keyPool = Object.keys({ ...pool, ...buildable })
+
+
+    const performDispatch = (dispatch, name) => {
+        if (thunks[name] !== undefined) {
+            return (...args) => dispatch(getThunkActions()[name](...args))
+        }
+
+        return payload => dispatch({type: name, payload})
+    }
+
+    let thunkActions = {}
+    each(Object.keys(thunks), thunk => {
+        thunkActions[thunk] = (...args) => {
+            return function (dispatch, getState) {
+                thunks[thunk](...args)((name, ...args) => performDispatch(dispatch, name)(...args), getState, ...args)
+            }
+        }
+    })
+
+    function getThunkActions() {
+        return {
+            ...thunkActions,
+            call: (type, payload) => ({type, payload}),
+        }
+    }
 
     return (Component, ...fusion) => {
         if (args.length === 0) {
             return withReactizy(Component, ...fusion)
         }
 
+
         const isHocFirst = keyPool.indexOf(args[0][0]) !== -1
         const isArray = subject => subject.constructor.name.toLowerCase() === "array"
-        const reduxerArgs = givenArgs =>
-            isArray(givenArgs[0]) === true && isArray(givenArgs[0][0]) === true ? givenArgs[0] : [...givenArgs]
 
-        let usesReduxers = [[], []]
+        let usesReduxers = []
 
-        const checkReduxers = (GivenComponent, givenArgs = [[]]) => {
-            GivenComponent.reduxers = [
-                [...givenArgs[0], ...usesReduxers[0]],
-                givenArgs[1] !== undefined ? [...givenArgs[1], ...usesReduxers[1]] : usesReduxers[1],
-            ]
+        const checkReduxers = (GivenComponent, givenState = [], givenThunks = []) => {
+            let reduxers = [...givenState, ...usesReduxers]
+            let newActions = []
+            let newThunks = thunkActions
+
+            if (givenThunks.length > 0) {
+                newThunks = {}
+                each(givenThunks, thunk => {
+                    if (thunkActions[thunk] !== undefined) {
+                        newThunks[thunk] = thunkActions[thunk]
+                    }
+                })
+            }
+
+            GivenComponent.reduxers = reduxers
+            GivenComponent.thunks = newThunks
+            GivenComponent.thunkOptions = options
 
             return withReactizy(GivenComponent, ...fusion)
         }
@@ -37,21 +74,7 @@ export default (pool = {}, buildable = {}) => (...args) => {
             }
 
             if (buildable[item] !== undefined) {
-                const buildableData = buildable[item]
-
-                if (isArray(buildableData) === false) {
-                    return hocCreator(item, buildable[item])
-                }
-
-                let [method, states = [], actions = [], hocs = []] = buildableData
-                usesReduxers = [
-                    [...usesReduxers[0], ...states],
-                    [...usesReduxers[1], ...actions],
-                ]
-
-                extendedHocs = [...extendedHocs, ...map(hocs, parseUseItem)]
-
-                return hocCreator(item, method)
+                return hocCreator(item, buildable[item])
             }
 
             return null
@@ -66,11 +89,16 @@ export default (pool = {}, buildable = {}) => (...args) => {
         }
 
         if (isHocFirst === true && args.length > 1) {
-            let [use, ...rest] = args
+            let [use, state, thunks = []] = args
 
-            return compose(...getUses(use))(checkReduxers(Component, reduxerArgs(rest)))
+            if (args.length === 2 && state.length > 0 && thunkActions[state[0]] !== undefined) {
+                thunks = [...state]
+                state = []
+            }
+
+            return compose(...getUses(use))(checkReduxers(Component, state, thunks))
         }
 
-        return checkReduxers(Component, reduxerArgs(args))
+        return checkReduxers(Component, args[0])
     }
 }

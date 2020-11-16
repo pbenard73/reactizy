@@ -27,4 +27,3 @@ export const createStore = store
 export const hocBuilder = src_hocBuilder
 
 export const hocCreator = src_hocCreator
-

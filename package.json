@@ -1,6 +1,6 @@
 {
   "name": "reactizy",
-  "version": "2.1.1",
+  "version": "3.0.0",
   "description": "Reactizy is a React High Order Component and a toolkit allowing to simplify to use of react-redux, providing asynchronous reducers, permitting to split *react components* in order to have a better readability, call api with simply library and some usefull utilities.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -20,9 +20,11 @@
     "redux",
     "redux async",
     "react redux",
+    "redux-thunk",
     "reducer",
     "architecture",
-    "simplify"
+    "simplify",
+    "easy"
   ],
   "author": "BENARD Patrick <pbenard73@gmail.com>",
   "license": "ISC",
@@ -43,12 +45,14 @@
     "express": "^4.17.1",
     "jest": "^26.5.2",
     "react": ">16.13.1",
+    "redux-thunk": "^2.3.0",
     "typescript": "^4.0.3",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
     "webpack-node-externals": "^2.5.1"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.12.1",
     "axios": "^0.20.0",
     "prop-types": ">=15.7.2",
     "react-dom": ">=16.13.1",

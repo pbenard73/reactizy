@@ -7,24 +7,25 @@ import { Provider } from "react-redux"
 import PropTypes from "prop-types"
 
 import ReactizyProvider from "./Provider"
-import AsyncProvider from "./AsyncProvider"
 import reduxer from "./reduxer"
 
 const Store = props => {
-    const extra = reduxer(...props.reduxers, true)
+    let reduxers = [...props.reduxers]
+
+    const extra = reduxer(...reduxers, true)
 
     if (props.apis === undefined) {
         return (
-            <Provider store={store(...props.reduxers)}>
-                <AsyncProvider value={extra}>{props.children}</AsyncProvider>
+            <Provider store={store(...reduxers)}>
+                {props.children}
             </Provider>
         )
     }
 
     return (
-        <Provider store={store(...props.reduxers)}>
+        <Provider store={store(...reduxers)}>
             <ReactizyProvider apis={props.apis}>
-                <AsyncProvider value={extra}>{props.children}</AsyncProvider>
+                {props.children}
             </ReactizyProvider>
         </Provider>
     )

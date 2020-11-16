@@ -1,4 +1,5 @@
 import Api, { getOptions } from './../src/Api'
+import "@babel/polyfill";
 
 const routeOne = 'myurl'
 const routeTwo = {path:'/url'}
@@ -52,15 +53,46 @@ test('Route with full feature should return the given Feature', () => {
     expect(requestOptions.data.form).toBe('mydata')
 })
 
-/*
-test('Api call should return a promise', () => {
-    Api.call('/')
-    .catch({})
-    .finally(() => {
-    //    expect(Api.call).toHaveBeenCalled()
+test('Api Post call should return a promise', async () => {
+    const result = await new Promise((resolve, reject) => {
+        Api.call('/', {query: 'query'}, {test:'api'})
+        .then(() => resolve(true))
+        .catch(() => resolve(true))
     })
+
+    expect(result).toBe(true)
 })
 
+test('Api Get call should return a promise', async () => {
+    const result = await new Promise((resolve, reject) => {
+        Api.call('/')
+        .then(() => resolve(true))
+        .catch(() => resolve(true))
+    })
+
+    expect(result).toBe(true)
+})
+
+test('Api Real Get call should return a promise', async () => {
+    const result = await new Promise((resolve, reject) => {
+        Api.call('https://jsonplaceholder.typicode.com/todos/1')
+        .then(() => resolve(true))
+        .catch(() => resolve(true))
+    })
+
+    expect(result).toBe(true)
+})
+
+test('Api Bad Get call should return a promise', async () => {
+    const result = await new Promise((resolve, reject) => {
+        Api.call('https://noThingToSeeHere.com/todos/1')
+        .then(() => resolve(true))
+        .catch(() => resolve(true))
+    })
+
+    expect(result).toBe(true)
+})
+/*
 test('Api call shoudl return a promise', () => {
     Api.call('https://jsonplaceholder.typicode.com/todos/1')
     .catch({})

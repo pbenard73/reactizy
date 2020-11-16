@@ -5,7 +5,6 @@ export default function (...reduxers) {
 
     let actionsPool = {}
 
-    const asyncSuffix = "Async"
     let asyncs = {}
 
     each(reduxers, reducer => {
@@ -13,32 +12,13 @@ export default function (...reduxers) {
             initialState = { ...initialState, ...reducer.state }
         }
 
-        let actions = {}
-
         if (reducer.actions !== undefined) {
-            each(Object.keys(reducer.actions), name => {
-                let index = name.indexOf(asyncSuffix)
-
-                let isSync = index < 1 || index !== name.length - asyncSuffix.length
-
-                if (isSync === false) {
-                    asyncs[name] = reducer.actions[name]
-                    actions[name] = (state, payload) => {
-                        payload = [null, undefined].indexOf(payload) === -1 || typeof payload !== "object" ? {} : payload
-
-                        return { ...state, ...payload }
-                    }
-                } else {
-                    actions[name] = reducer.actions[name]
-                }
-            })
-
-            actionsPool = { ...actionsPool, ...actions }
+            actionsPool = { ...actionsPool, ...reducer.actions }
         }
     })
 
     if (reduxers[reduxers.length - 1] === true) {
-        return asyncs
+        return {actions: asyncs}
     }
 
     return (state = initialState, action) => {

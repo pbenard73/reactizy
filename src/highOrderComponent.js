@@ -4,7 +4,6 @@ import { connect } from "react-redux"
 
 import each from "./each"
 import autobind from "./autobind"
-import AsyncContext from "./AsyncContext"
 import Context from "./Context"
 import Api from "./Api"
 
@@ -26,26 +25,24 @@ export default function withReactify(WrappedComponent, ...parts) {
         .concat(wrappedProto)
 
     let staticState = WrappedComponent.reduxers
+    let staticThunks = WrappedComponent.thunks !== undefined ? WrappedComponent.thunks : {}
+    let thunkOptions = WrappedComponent.thunkOptions !== undefined ? WrappedComponent.thunkOptions : { name: "call" }
 
     const isArray = item => [null, undefined].indexOf(item) === -1 && item.constructor.name.toLowerCase() === "array"
 
-    staticState = isArray(staticState) === false || staticState.length === 0 ? [[], []] : staticState
+    staticState = isArray(staticState) === false || staticState.length === 0 ? [] : staticState
 
-    let pooler = {
-        wantedStateProperties: isArray(staticState[0]) === false ? [] : staticState[0],
-        wantedActions: staticState.length > 1 && isArray(staticState[1]) === true ? staticState[1] : [],
-    }
+    let wantedStateProperties = isArray(staticState) === false ? [] : staticState
 
     let newState = {}
     let newMethods = {}
 
     each(parts, part => {
         if (part.reduxers !== undefined) {
-            each(["wantedStateProperties", "wantedActions"], (pool, i) => {
-                let partialPool = part.reduxers[i]
-                partialPool = partialPool === undefined ? [] : partialPool.filter(item => pooler[pool].indexOf(item) === -1)
-                pooler[pool] = [...pooler[pool], ...partialPool]
-            })
+            let partialPool = part.reduxers
+            partialPool =
+                partialPool === undefined ? [] : partialPool.filter(item => wantedStateProperties.indexOf(item) === -1)
+            wantedStateProperties = [...wantedStateProperties, ...partialPool]
         }
 
         if (isClass === true) {
@@ -87,83 +84,26 @@ export default function withReactify(WrappedComponent, ...parts) {
     const mapStateToProps = state => {
         let properties = {}
 
-        each(pooler.wantedStateProperties, property => {
+        each(wantedStateProperties, property => {
             properties[property] = state[property]
         })
 
         return properties
     }
 
-    const mapActionsToProps = {}
-    const suffix = "Async"
+    let mapActionsToProps = { ...staticThunks }
 
-    each(pooler.wantedActions, action => {
-        const index = action.indexOf(suffix)
-        let name = index < 1 ? action : `${action}_inner_redux`
-
-        mapActionsToProps[name] = payload => {
-            return { type: action, payload }
+    const callDispatch = (type, ...args) => {
+        if (staticThunks[type] === undefined) {
+            return { type, payload: args[0] !== undefined ? args[0] : {} }
         }
-    })
 
-    const MyAsyncHoc = GivenComponent => {
-        return class MyHoc extends React.Component {
-            constructor(props) {
-                super(props)
-
-                this.bindProps = {}
-                each(Object.keys(props), propName => {
-                    const suffix = "BindThis"
-                    const index = propName.length - suffix.length
-
-                    if (propName.indexOf(suffix) === index && index > 0) {
-                        const cleanName = propName.replace(suffix, "")
-
-                        this.bindProps[cleanName] = (...args) => this.props[propName].call(this.getMyProps(), ...args)
-                    }
-                })
-            }
-
-            getMyProps() {
-                return { props: { ...this.props, ...this.bindProps } }
-            }
-
-            render() {
-                return (
-                    <AsyncContext.Consumer>
-                        {value => {
-                            let data = {}
-
-                            each(Object.keys(value), actionName => {
-                                if (pooler.wantedActions.indexOf(actionName) === -1) {
-                                    return
-                                }
-
-                                data[actionName] = (...args) =>
-                                    new Promise((resolve, reject) => {
-                                        value[actionName](...args)
-                                            .then(payload => {
-                                                const type = `${actionName}_inner_redux`
-
-                                                this.props[type](payload)
-
-                                                resolve(true)
-                                            })
-                                            .catch(error => reject(error))
-                                    })
-                            })
-
-                            return <GivenComponent {...this.props} {...this.bindProps} {...data} />
-                        }}
-                    </AsyncContext.Consumer>
-                )
-            }
-        }
+        return staticThunks[type](...args)
     }
 
-    let Component = MyAsyncHoc(myComponent)
+    mapActionsToProps[thunkOptions.name] = callDispatch
 
-    Component = connect(mapStateToProps, mapActionsToProps)(Component)
+    let Component = connect(mapStateToProps, mapActionsToProps)(myComponent)
 
     const apiFunctions = (context, url = false) => {
         return (routeName, ...args) => {
