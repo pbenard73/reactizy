@@ -6,9 +6,8 @@ import { compose } from "redux"
 import withReactizy from "./highOrderComponent"
 import hocCreator from "./hocCreator"
 
-export default (pool = {}, buildable = {}, thunks = {}, options = {name: 'call'}) => (...args) => {
+export default (pool = {}, buildable = {}, thunks = {}, options = {name: "call"}) => (...args) => {
     const keyPool = Object.keys({ ...pool, ...buildable })
-
 
     const performDispatch = (dispatch, name) => {
         if (thunks[name] !== undefined) {
@@ -40,17 +39,17 @@ export default (pool = {}, buildable = {}, thunks = {}, options = {name: 'call'}
         }
 
 
-        const isHocFirst = keyPool.indexOf(args[0][0]) !== -1
-        const isArray = subject => subject.constructor.name.toLowerCase() === "array"
+        const isHocFirst = args[0].length === 0 || keyPool.indexOf(args[0][0]) !== -1
 
         let usesReduxers = []
 
         const checkReduxers = (GivenComponent, givenState = [], givenThunks = []) => {
             let reduxers = [...givenState, ...usesReduxers]
-            let newActions = []
-            let newThunks = thunkActions
+            let newThunks = {}
 
-            if (givenThunks.length > 0) {
+            if (givenThunks === true) {
+                newThunks = thunkActions
+            } else if (givenThunks.length > 0) {
                 newThunks = {}
                 each(givenThunks, thunk => {
                     if (thunkActions[thunk] !== undefined) {

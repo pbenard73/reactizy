@@ -7,12 +7,9 @@ import { Provider } from "react-redux"
 import PropTypes from "prop-types"
 
 import ReactizyProvider from "./Provider"
-import reduxer from "./reduxer"
 
 const Store = props => {
     let reduxers = [...props.reduxers]
-
-    const extra = reduxer(...reduxers, true)
 
     if (props.apis === undefined) {
         return (

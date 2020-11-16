@@ -1,2 +1,2 @@
-declare function _default(methodName: any, method: any): (Component: any) => (props: any) => any;
-export default _default;
+export default hocCreator;
+declare function hocCreator(methodName: any, method: any): (Component: any) => (props: any) => any;

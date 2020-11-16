@@ -1,3 +1,13 @@
-import React from 'react'
+import React from "react"
 
-export default (methodName, method) => Component => props => <Component {...{[`${methodName}`]: method}} {...props} />
+const hocCreator = (methodName, method) => {
+    const hoc = Component => {
+        const NewComponent = props => <Component {...{ [`${methodName}`]: method }} {...props} />
+
+        return NewComponent
+    }
+
+    return hoc
+}
+
+export default hocCreator

@@ -5,8 +5,6 @@ export default function (...reduxers) {
 
     let actionsPool = {}
 
-    let asyncs = {}
-
     each(reduxers, reducer => {
         if (reducer.state !== undefined) {
             initialState = { ...initialState, ...reducer.state }
@@ -16,10 +14,6 @@ export default function (...reduxers) {
             actionsPool = { ...actionsPool, ...reducer.actions }
         }
     })
-
-    if (reduxers[reduxers.length - 1] === true) {
-        return {actions: asyncs}
-    }
 
     return (state = initialState, action) => {
         const registeredAction = actionsPool[action.type]
