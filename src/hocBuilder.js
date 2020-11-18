@@ -6,7 +6,12 @@ import { compose } from "redux"
 import withReactizy from "./highOrderComponent"
 import hocCreator from "./hocCreator"
 
-export default (pool = {}, buildable = {}, thunks = {}, options = {name: "call"}) => (...args) => {
+export default (givenObject = {}) => (...args) => {
+    const pool = givenObject.hocs !== undefined ? givenObject.hocs : {}
+    const buildable = givenObject.customs !== undefined ? givenObject.customs : {}
+    const thunks = givenObject.thunks !== undefined ? givenObject.thunks : {}
+    const options = givenObject.options !== undefined ? givenObject.options : { name: "call" }
+
     const keyPool = Object.keys({ ...pool, ...buildable })
 
     const performDispatch = (dispatch, name) => {
@@ -14,7 +19,7 @@ export default (pool = {}, buildable = {}, thunks = {}, options = {name: "call"}
             return (...args) => dispatch(getThunkActions()[name](...args))
         }
 
-        return payload => dispatch({type: name, payload})
+        return payload => dispatch({ type: name, payload })
     }
 
     let thunkActions = {}
@@ -29,7 +34,7 @@ export default (pool = {}, buildable = {}, thunks = {}, options = {name: "call"}
     function getThunkActions() {
         return {
             ...thunkActions,
-            call: (type, payload) => ({type, payload}),
+            call: (type, payload) => ({ type, payload }),
         }
     }
 
@@ -37,7 +42,6 @@ export default (pool = {}, buildable = {}, thunks = {}, options = {name: "call"}
         if (args.length === 0) {
             return withReactizy(Component, ...fusion)
         }
-
 
         const isHocFirst = args[0].length === 0 || keyPool.indexOf(args[0][0]) !== -1
 
@@ -54,7 +58,9 @@ export default (pool = {}, buildable = {}, thunks = {}, options = {name: "call"}
                 each(givenThunks, thunk => {
                     if (thunkActions[thunk] !== undefined) {
                         newThunks[thunk] = thunkActions[thunk]
-                    }
+                    } else {
+                        newThunks[thunk] = payload => ({ type: thunk, payload })
+                    } 
                 })
             }
 
@@ -83,21 +89,26 @@ export default (pool = {}, buildable = {}, thunks = {}, options = {name: "call"}
             return [...map(givenArgs, parseUseItem), ...extendedHocs]
         }
 
-        if (isHocFirst === true && args.length === 1) {
-            return compose(...getUses(args[0]))(checkReduxers(Component))
-        }
-
-        if (isHocFirst === true && args.length > 1) {
-            let [use, state, thunks = []] = args
-
-            if (args.length === 2 && state.length > 0 && thunkActions[state[0]] !== undefined) {
-                thunks = [...state]
-                state = []
+        const guessStateOrThunk = (statesOrThunks = [], thunks = []) => {
+            if (thunks.length === 0 && statesOrThunks === true) {
+                return [[], true]
             }
 
-            return compose(...getUses(use))(checkReduxers(Component, state, thunks))
+            if (statesOrThunks.length > 0 && thunkActions[statesOrThunks[0]] !== undefined) {
+                return [[], statesOrThunks]
+            }
+
+            return [statesOrThunks, thunks]
         }
 
-        return checkReduxers(Component, args[0])
+        if (isHocFirst === true) {
+            let [use, state = [], thunks = []] = args
+
+            return args.length > 1
+                ? compose(...getUses(use))(checkReduxers(Component, ...guessStateOrThunk(state, thunks)))
+                : compose(...getUses(use))(checkReduxers(Component))
+        }
+
+        return checkReduxers(Component, ...guessStateOrThunk(...args))
     }
 }

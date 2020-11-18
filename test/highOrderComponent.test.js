@@ -9,31 +9,6 @@ import Store from "./../src/Store"
 
 const Component = props => <div></div>
 
-class ThunkedCompo extends React.Component {
-    constructor(props) {
-        super(props)
-        console.log(this.props)
-    }
-
-    componentDidMount() {
-        act(() => {
-            this.props.call("thunkFirstname", "my new first name")
-            this.props.api.call("main")
-            this.props.api.call("wrongRoute")
-        })
-    }
-    render() {
-        console.log(this.props)
-        return (
-            <div>
-                <div>{this.props.name}</div>
-                <div>{this.props.firstname}</div>
-                <div>{this.props.age}</div>
-            </div>
-        )
-    }
-}
-
 class Compo extends React.Component {
     componentDidMount() {
         act(() => {
@@ -76,61 +51,6 @@ const Sub = new (class {
 const api = {
     main: { path: "/" },
 }
-
-test("Hoc should trigger thunks", () => {
-    const hoc = hocBuilder(
-        {
-            alert: () => {},
-        },
-        {},
-        {
-            thunkFirstname: function (firstname) {
-                return (dispatch, getState, firstname) => {
-                    dispatch("setFirstname", firstname)
-                    dispatch("setName", "my second name")
-                    dispatch("thunkAge", "456123")
-                }
-            },
-            thunkAge: function (age) {
-                return (dispatch, getState, age) => {
-                    dispatch("setAge", age)
-                }
-            },
-        }
-    )
-
-    const reduxer = new (class {
-        state = {
-            name: "myName",
-            firstname: "myFirstname",
-            age: "0",
-        }
-
-        actions = {
-            setAge: (state, age) => ({ ...state, age }),
-            setName: (state, name) => {
-                return { ...state, name }
-            },
-            setFirstname: (state, firstname) => {
-                return { ...state, firstname }
-            },
-        }
-    })()
-
-    const Simple = hoc([], ["age", "name", "firstname"], ["thunkFirstname"])(ThunkedCompo)
-    expect(typeof Simple).toBe("object")
-
-    const { container } = render(
-        <Store reduxers={[reduxer, true]} apis={[api]}>
-            <Simple />
-        </Store>
-    )
-
-    console.log(container.innerHTML)
-    expect(container).toHaveTextContent("my second name")
-    expect(container).toHaveTextContent("my new first name")
-    expect(container).toHaveTextContent("456123")
-})
 
 test("Hoc should return a function", () => {
     const Simple = withReactizy(Component)
