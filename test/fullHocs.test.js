@@ -14,6 +14,8 @@ class ThunkedCompo extends React.Component {
         super(props)
     }
 
+    afterBind() {}
+
     componentDidMount() {
         act(() => {
             this.props.call("thunkFirstname", "my new first name")
@@ -32,13 +34,18 @@ class ThunkedCompo extends React.Component {
     }
 }
 
+const fusion = {
+    hocs: ['alert'],
+        component: () => new (class{
+    })
+}
 
 const api = {
     main: { path: "/" },
 }
 
 test("Hoc should trigger thunks", () => {
-    const hoc = hocBuilder({
+    const fushoc = hocBuilder({
         hocs: {
             alert: Component => Component,
         },
@@ -59,8 +66,30 @@ test("Hoc should trigger thunks", () => {
         customs: {
             customize: function(test) {alert(test)}
         }
-    }
-    )
+    })
+    const hoc = hocBuilder({
+        hocs: {
+            alert: Component => Component,
+        },
+        fusion:[fusion],
+        thunks: {
+            thunkFirstname: function (firstname) {
+                return (dispatch, getState, firstname) => {
+                    dispatch("setFirstname", firstname)
+                    dispatch("setName", "my second name")
+                    dispatch("thunkAge", "456123")
+                }
+            },
+            thunkAge: function (age) {
+                return (dispatch, getState, age) => {
+                    dispatch("setAge", age)
+                }
+            },
+        },
+        customs: {
+            customize: function(test) {alert(test)}
+        }
+    })
 
     const reduxer = new (class {
         state = {
@@ -139,6 +168,33 @@ test("Hoc should trigger thunks", () => {
     let { container:sexoContainer } = render(
         <Store reduxers={[reduxer, true]} apis={[api]}>
             <Sexo />
+        </Store>
+    )
+
+    const Setto = fushoc(['alert', 'customize', 'invalid'], ['thunkFirstname'])(ThunkedCompo)
+    expect(typeof Setto).toBe("function")
+
+    let { container:settoContainer } = render(
+        <Store reduxers={[reduxer, true]} apis={[api]}>
+            <Setto />
+        </Store>
+    )
+
+    const Otto = fushoc()(ThunkedCompo)
+    expect(typeof Otto).toBe("object")
+
+    let { container:ottoContainer } = render(
+        <Store reduxers={[reduxer, true]} apis={[api]}>
+            <Otto />
+        </Store>
+    )
+
+    const Novo = fushoc()(false, ThunkedCompo)
+    expect(typeof Novo).toBe("object")
+
+    let { container:novoContainer } = render(
+        <Store reduxers={[reduxer, true]} apis={[api]}>
+            <Novo />
         </Store>
     )
 })

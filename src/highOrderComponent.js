@@ -77,6 +77,10 @@ export default function withReactify(WrappedComponent, ...parts) {
                 })
 
                 autobind.call(this, baseProperties)
+
+                if (this.afterBind !== undefined && typeof this.afterBind === "function") {
+                    this.afterBind()
+                }
             }
         }
     }

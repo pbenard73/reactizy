@@ -15,7 +15,7 @@ export const Store: {
 export const createStore: (...args: any[]) => import("redux").Store<any, any> & {
     dispatch: any;
 };
-export const hocBuilder: (givenObject?: {}) => (...args: any[]) => (Component: any, ...fusion: any[]) => any;
+export const hocBuilder: (givenObject?: {}) => (...args: any[]) => (NoFusionComponent: any, ...componentOrFusion: any[]) => any;
 export const hocCreator: (methodName: any, method: any) => (Component: any) => (props: any) => any;
 import src_autobind from "./autobind";
 import src_fusion from "./fusion";
