@@ -26,7 +26,8 @@ export default function withReactify(WrappedComponent, ...parts) {
 
     let staticState = WrappedComponent.reduxers
     let staticThunks = WrappedComponent.thunks !== undefined ? WrappedComponent.thunks : {}
-    let thunkOptions = WrappedComponent.thunkOptions !== undefined ? WrappedComponent.thunkOptions : { name: "call" }
+    let thunkOptions = WrappedComponent.thunkOptions !== undefined ? WrappedComponent.thunkOptions : { name: "call", api: "true" }
+    const useApi = WrappedComponent.useApi === false ? false : thunkOptions.api !== false 
 
     const isArray = item => [null, undefined].indexOf(item) === -1 && item.constructor.name.toLowerCase() === "array"
 
@@ -37,6 +38,10 @@ export default function withReactify(WrappedComponent, ...parts) {
     let newState = {}
     let newMethods = {}
 
+    /**
+     * Extract all 'Fusion' parts :
+     * Save state, methods and reduxers
+     */
     each(parts, part => {
         if (part.reduxers !== undefined) {
             let partialPool = part.reduxers
@@ -66,6 +71,9 @@ export default function withReactify(WrappedComponent, ...parts) {
 
     let myComponent = WrappedComponent
 
+    /**
+     * Merge 'Fusion' parts if current Component is a class
+     */
     if (isClass === true) {
         myComponent = class Extended extends WrappedComponent {
             constructor(props) {
@@ -85,6 +93,9 @@ export default function withReactify(WrappedComponent, ...parts) {
         }
     }
 
+    /**
+     * Perform redux state to props
+     */
     const mapStateToProps = state => {
         let properties = {}
 
@@ -95,6 +106,10 @@ export default function withReactify(WrappedComponent, ...parts) {
         return properties
     }
 
+
+    /**
+     * Affect redux actions and thunks to props
+     */
     let mapActionsToProps = { ...staticThunks }
 
     const callDispatch = (type, ...args) => {
@@ -107,8 +122,18 @@ export default function withReactify(WrappedComponent, ...parts) {
 
     mapActionsToProps[thunkOptions.name] = callDispatch
 
+    /**
+     * Connect component with redux
+     */
     let Component = connect(mapStateToProps, mapActionsToProps)(myComponent)
 
+    if (useApi === false) {
+        return Component
+    }
+
+    /**
+     * Apply the api behaviour
+     */
     const apiFunctions = (context, url = false) => {
         return (routeName, ...args) => {
             let route = context.api[routeName]

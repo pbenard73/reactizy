@@ -9,7 +9,15 @@ import PropTypes from "prop-types"
 import ReactizyProvider from "./Provider"
 
 const Store = props => {
-    let reduxers = [...props.reduxers]
+    let hocs = []
+    let reduxers = []
+    if (props.hocs !== undefined && props.hocs.length > 0) {
+        reduxers = [...props.hocs[0].reduxers]
+
+        if (props.hocs[props.hocs.length - 1] === true) {
+            reduxers.push(true)
+        }
+    }
 
     if (props.apis === undefined) {
         return (
@@ -29,7 +37,7 @@ const Store = props => {
 }
 
 Store.propTypes = {
-    reduxers: PropTypes.array,
+    hocs: PropTypes.array,
     apis: PropTypes.array,
     children: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
 }

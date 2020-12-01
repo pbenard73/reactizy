@@ -9,6 +9,29 @@ import Store from "./../src/Store"
 
 const Component = props => <div></div>
 
+class NoApiCompo extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+
+    afterBind() {}
+
+    componentDidMount() {
+        act(() => {
+            this.props.call("thunkFirstname", "my new first name")
+        })
+    }
+    render() {
+        return (
+            <div>
+                <div>{this.props.name}</div>
+                <div>{this.props.firstname}</div>
+                <div>{this.props.age}</div>
+            </div>
+        )
+    }
+}
+
 class ThunkedCompo extends React.Component {
     constructor(props) {
         super(props)
@@ -45,7 +68,53 @@ const api = {
 }
 
 test("Hoc should trigger thunks", () => {
+    const reduxer = new (class {
+        state = {
+            name: "myName",
+            firstname: "myFirstname",
+            age: "0",
+        }
+
+        actions = {
+            setAge: (state, age) => ({ ...state, age }),
+            setName: (state, name) => {
+                return { ...state, name }
+            },
+            setFirstname: (state, firstname) => {
+                return { ...state, firstname }
+            },
+        }
+    })()
+
+    const permhoc = hocBuilder({
+        reduxers: [reduxer],
+        hocs: {
+            alert: Component => Component,
+        },
+        thunks: {
+            thunkFirstname: function (firstname) {
+                return (dispatch, getState, firstname) => {
+                    dispatch("setFirstname", firstname)
+                    dispatch("setName", "my second name")
+                    dispatch("thunkAge", "456123")
+                }
+            },
+            thunkAge: function (age) {
+                return (dispatch, getState, age) => {
+                    dispatch("setAge", age)
+                }
+            },
+        },
+        customs: {
+            customize: function(test) {alert(test)}
+        },
+        options: {
+            permissive: true
+        }
+    })
+
     const fushoc = hocBuilder({
+        reduxers: [reduxer],
         hocs: {
             alert: Component => Component,
         },
@@ -68,6 +137,7 @@ test("Hoc should trigger thunks", () => {
         }
     })
     const hoc = hocBuilder({
+        reduxers: [reduxer],
         hocs: {
             alert: Component => Component,
         },
@@ -91,29 +161,12 @@ test("Hoc should trigger thunks", () => {
         }
     })
 
-    const reduxer = new (class {
-        state = {
-            name: "myName",
-            firstname: "myFirstname",
-            age: "0",
-        }
-
-        actions = {
-            setAge: (state, age) => ({ ...state, age }),
-            setName: (state, name) => {
-                return { ...state, name }
-            },
-            setFirstname: (state, firstname) => {
-                return { ...state, firstname }
-            },
-        }
-    })()
 
     const Simple = hoc([], ["age", "name", "firstname"], ["thunkFirstname"])(ThunkedCompo)
     expect(typeof Simple).toBe("object")
 
     let { container } = render(
-        <Store reduxers={[reduxer, true]} apis={[api]}>
+        <Store hocs={[hoc, true]} apis={[api]}>
             <Simple />
         </Store>
     )
@@ -126,7 +179,7 @@ test("Hoc should trigger thunks", () => {
     expect(typeof Double).toBe("object")
 
     let { container:doubleContainer } = render(
-        <Store reduxers={[reduxer, true]} apis={[api]}>
+        <Store hocs={[hoc, true]} apis={[api]}>
             <Double />
         </Store>
     )
@@ -139,7 +192,7 @@ test("Hoc should trigger thunks", () => {
     expect(typeof Triple).toBe("object")
 
     let { container:tripleContainer } = render(
-        <Store reduxers={[reduxer, true]} apis={[api]}>
+        <Store hocs={[hoc, true]} apis={[api]}>
             <Triple />
         </Store>
     )
@@ -148,7 +201,7 @@ test("Hoc should trigger thunks", () => {
     expect(typeof Quatro).toBe("object")
 
     let { container:quatroContainer } = render(
-        <Store reduxers={[reduxer, true]} apis={[api]}>
+        <Store hocs={[hoc, true]} apis={[api]}>
             <Quatro />
         </Store>
     )
@@ -157,7 +210,7 @@ test("Hoc should trigger thunks", () => {
     expect(typeof Cinquo).toBe("object")
 
     let { container:cinquoContainer } = render(
-        <Store reduxers={[reduxer, true]} apis={[api]}>
+        <Store hocs={[hoc, true]} apis={[api]}>
             <Cinquo />
         </Store>
     )
@@ -166,7 +219,7 @@ test("Hoc should trigger thunks", () => {
     expect(typeof Sexo).toBe("function")
 
     let { container:sexoContainer } = render(
-        <Store reduxers={[reduxer, true]} apis={[api]}>
+        <Store hocs={[hoc, true]} apis={[api]}>
             <Sexo />
         </Store>
     )
@@ -175,7 +228,7 @@ test("Hoc should trigger thunks", () => {
     expect(typeof Setto).toBe("function")
 
     let { container:settoContainer } = render(
-        <Store reduxers={[reduxer, true]} apis={[api]}>
+        <Store hocs={[fushoc, true]} apis={[api]}>
             <Setto />
         </Store>
     )
@@ -184,7 +237,7 @@ test("Hoc should trigger thunks", () => {
     expect(typeof Otto).toBe("object")
 
     let { container:ottoContainer } = render(
-        <Store reduxers={[reduxer, true]} apis={[api]}>
+        <Store hocs={[fushoc, true]} apis={[api]}>
             <Otto />
         </Store>
     )
@@ -193,8 +246,27 @@ test("Hoc should trigger thunks", () => {
     expect(typeof Novo).toBe("object")
 
     let { container:novoContainer } = render(
-        <Store reduxers={[reduxer, true]} apis={[api]}>
+        <Store hocs={[fushoc, true]} apis={[api]}>
             <Novo />
+        </Store>
+    )
+
+    const T10 = permhoc('alert', 'customize', 'invalid', 'thunkFirstname')(ThunkedCompo)
+    expect(typeof T10).toBe("object")
+
+    let { container:t10Container } = render(
+        <Store hocs={[permhoc, true]} apis={[api]}>
+            <T10 />
+        </Store>
+    )
+
+    NoApiCompo.useApi = false
+    const T11 = permhoc('thunkFirstname', 'name')(NoApiCompo)
+    expect(typeof T11).toBe("object")
+
+    let { container:t11Container } = render(
+        <Store hocs={[permhoc]} apis={[api]}>
+            <T11 />
         </Store>
     )
 })

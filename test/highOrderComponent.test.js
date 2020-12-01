@@ -76,7 +76,7 @@ test("Hoc should return a function", () => {
     })()
 
     const { container } = render(
-        <Store reduxers={[reduxer, true]}>
+        <Store hocs={[{reduxers: [reduxer]}]}>
             <Fus />
             <Component />
         </Store>
@@ -85,7 +85,7 @@ test("Hoc should return a function", () => {
     expect(container).toHaveTextContent("my new name")
 
     const { container: containerBis } = render(
-        <Store reduxers={[reduxer]} apis={[api]}>
+        <Store hocs={[{reduxers: [reduxer]}]} apis={[api]}>
             <Fus />
             <Component />
         </Store>
@@ -95,7 +95,7 @@ test("Hoc should return a function", () => {
     const FusFull = withReactizy(Full, Sub)
 
     const { container: containerTer } = render(
-        <Store reduxers={[reduxer]} apis={[api]}>
+        <Store hocs={[{reduxers: [reduxer]}]} apis={[api]}>
             <FusFull />
         </Store>
     )
