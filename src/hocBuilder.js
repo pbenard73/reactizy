@@ -1,6 +1,7 @@
+import React from "react"
 import map from "./map"
 import each from "./each"
-
+import Api from "./Api"
 import { compose } from "redux"
 
 import reduxerExtractor from "./reduxerExtractor"
@@ -11,19 +12,48 @@ const builder = (givenObject = {}) => {
     const hocs = givenObject.hocs !== undefined ? givenObject.hocs : {}
     const customs = givenObject.customs !== undefined ? givenObject.customs : {}
     const thunks = givenObject.thunks !== undefined ? givenObject.thunks : {}
+    const givenApis = givenObject.apis !== undefined ? givenObject.apis : []
     let initialReduxers = givenObject.reduxers !== undefined ? [...givenObject.reduxers] : []
     let hocFusion = givenObject.fusion !== undefined ? [...givenObject.fusion] : []
     let options = givenObject.options !== undefined ? givenObject.options : { name: "call", permissive: false }
-    options.permissive = options.permissive !== undefined ? options.permissive === true : false
     options.name = options.name !== undefined ? options.name : "call"
-    options.api = options.api !== false
     const keyPool = Object.keys({ ...hocs, ...customs })
     let cleanedFusion = []
 
+    /**
+     * Permform Api and ApiHoc
+     */
+    let api = {}
+    each(givenApis, apiPool => {
+        api = { ...api, ...apiPool }
+    })
+
+    const hasApi = Object.keys(api).length > 0
+
+    const apiFunctions = (url = false) => {
+        return (routeName, ...args) => {
+            let route = api[routeName]
+
+            if (route === undefined) {
+                return new Error(`Api route ${routeName} is not registered`)
+            }
+
+            return url === false ? Api.call(route, ...args) : Api.url(route, ...args)
+        }
+    }
+
+    const apiHoc = Component => props => <Component {...props} api={{ call: apiFunctions(), url: apiFunctions(true) }} />
+
+    /**
+     * Get Redux data from given reduxers
+     */
     const reduxerData = reduxerExtractor(...initialReduxers)
     let reduxStateKeys = reduxerData.state
     let reduxActionsKeys = reduxerData.actions
 
+    /**
+     * Get Uniq Hocs
+     */
     const concatUniqHoc = () => {
         let data = {
             hocs: [],
@@ -104,24 +134,24 @@ const builder = (givenObject = {}) => {
             }
 
             /**
-             * Return reactizy if nothing to proceed
+             * Return reactizy has nothing to proceed
              */
             if (args.length === 0 && hocFusionData.hocs.length === 0) {
+                if (hasApi === true) {
+                    return apiHoc(withReactizy(Component, ...fusion))
+                }
+
                 return withReactizy(Component, ...fusion)
             }
-
-            const isHocFirst = args.length === 0 || args[0].length === 0 || keyPool.indexOf(args[0][0]) !== -1
 
             /**
              * Attach redux state and action to Component
              */
             const checkReduxers = (GivenComponent, givenState = [], givenThunks = []) => {
-                let reduxers = [...givenState, ...(mergeHocFusion === true ? hocFusionData.reduxers: [])]
+                let reduxers = [...givenState, ...(mergeHocFusion === true ? hocFusionData.reduxers : [])]
                 let newThunks = {}
 
-                if (givenThunks === true) {
-                    newThunks = thunkActions
-                } else if (givenThunks.length > 0 || hocFusionData.actions.length > 0) {
+                if (givenThunks.length > 0 || hocFusionData.actions.length > 0) {
                     newThunks = {}
                     each([...givenThunks, ...hocFusionData.actions], thunk => {
                         if (thunkActions[thunk] !== undefined) {
@@ -136,6 +166,10 @@ const builder = (givenObject = {}) => {
 
                 const hocFusion = mergeHocFusion === true ? map(cleanedFusion, split => split()) : []
 
+                if (hasApi === true) {
+                    return apiHoc(withReactizy(GivenComponent, ...hocFusion, ...fusion))
+                }
+
                 return withReactizy(GivenComponent, ...hocFusion, ...fusion)
             }
 
@@ -148,11 +182,7 @@ const builder = (givenObject = {}) => {
                         return hocs[item]
                     }
 
-                    if (customs[item] !== undefined) {
-                        return hocCreator(item, customs[item])
-                    }
-
-                    return null
+                    return hocCreator(item, customs[item])
                 }
 
                 let uniqArgs = []
@@ -166,63 +196,31 @@ const builder = (givenObject = {}) => {
             }
 
             /**
-             * Retrieve state and action from args
+             * Retrieve state, action, hocs from args
              */
-            const guessStateOrThunk = (statesOrThunks = [], thunks = []) => {
-                if (thunks.length === 0 && statesOrThunks === true) {
-                    return [[], true]
-                }
-
-                if (statesOrThunks.length > 0 && thunkActions[statesOrThunks[0]] !== undefined) {
-                    return [[], statesOrThunks]
-                }
-
-                return [statesOrThunks, thunks]
+            let pool = {
+                use: [],
+                state: [],
+                actions: [],
             }
 
-            /**
-             * If permissive, loop trow each args and check its definition
-             * If has HOC then return compose
-             */
-            if (options.permissive === true) {
-                let pool = {
-                    use: [],
-                    state: [],
-                    actions: [],
+            each(args, key => {
+                if (hocs[key] !== undefined || customs[key] !== undefined) {
+                    pool.use.push(key)
+                } else if (reduxStateKeys.indexOf(key) !== -1) {
+                    pool.state.push(key)
+                } else if (thunkActions[key] !== undefined) {
+                    pool.actions.push(key)
                 }
+            })
 
-                each(args, key => {
-                    if (hocs[key] !== undefined) {
-                        pool.use.push(key)
-                    } else if (reduxStateKeys.indexOf(key) !== -1) {
-                        pool.state.push(key)
-                    } else if (thunkActions[key] !== undefined) {
-                        pool.actions.push(key)
-                    }
-                })
-
-                if (pool.use.length === 0) {
-                    return checkReduxers(Component, pool.state, pool.actions)
-                }
-
-                return compose(...getUses(pool.use))(checkReduxers(Component, pool.state, pool.actions))
-            } else if (isHocFirst === true) {
-                let [use = [], state = [], thunks = []] = args
-                let uses = [...use, ...hocFusionData.hocs]
-
-                return args.length > 1
-                    ? compose(...getUses(uses))(checkReduxers(Component, ...guessStateOrThunk(state, thunks)))
-                    : compose(...getUses(uses))(checkReduxers(Component))
-            } else if (hocFusionData.hocs.length > 0) {
-                let [state = [], thunks = []] = args
-                let uses = [...hocFusionData.hocs]
-
-                return args.length > 0
-                    ? compose(...getUses(uses))(checkReduxers(Component, ...guessStateOrThunk(state, thunks)))
-                    : compose(...getUses(uses))(checkReduxers(Component))
+            if (pool.use.length === 0 && hocFusionData.hocs.length === 0) {
+                return checkReduxers(Component, pool.state, pool.actions)
             }
 
-            return checkReduxers(Component, ...guessStateOrThunk(...args))
+            return compose(...getUses([...pool.use, ...hocFusionData.hocs]))(
+                checkReduxers(Component, pool.state, pool.actions)
+            )
         }
     }
 

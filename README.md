@@ -10,7 +10,7 @@
 
 * Split react components in order to have a better readability
 * Simplify to use of react-redux
-* Providing asynchronous reducers
+* Providing asynchronous reducers with readux-thunk
 * Call api with simply library
 ... and some usefull utilities.
 

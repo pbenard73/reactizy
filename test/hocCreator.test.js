@@ -4,7 +4,7 @@ import hocCreator from "./../src/hocCreator"
 
 test("HocCreator should return a function", () => {
     const HocFilled = hocBuilder({
-        custom: {
+        customs: {
             method: type => alert(type),
             another: [test => alert(test), ["state"], ["action"]],
         },
@@ -12,7 +12,7 @@ test("HocCreator should return a function", () => {
 
     const MyComponent = props => <div></div>
 
-    const Compo = HocFilled(["method"])(MyComponent)
+    const Compo = HocFilled("method")(MyComponent)
 
-    expect(typeof Compo).toBe("object")
+    expect(typeof Compo).toBe("function")
 })

@@ -8,7 +8,6 @@ export const Store: {
     (props: any): any;
     propTypes: {
         hocs: any;
-        apis: any;
         children: any;
     };
 };

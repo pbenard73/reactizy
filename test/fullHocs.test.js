@@ -18,7 +18,7 @@ class NoApiCompo extends React.Component {
 
     componentDidMount() {
         act(() => {
-            this.props.call("thunkFirstname", "my new first name")
+ //           this.props.thunkFirstname("my new first name")
         })
     }
     render() {
@@ -41,7 +41,7 @@ class ThunkedCompo extends React.Component {
 
     componentDidMount() {
         act(() => {
-            this.props.call("thunkFirstname", "my new first name")
+            this.props.thunkFirstname("my new first name")
             this.props.api.call("main")
             this.props.api.call("wrongRoute")
         })
@@ -57,14 +57,13 @@ class ThunkedCompo extends React.Component {
     }
 }
 
-const fusion = {
-    hocs: ['alert'],
-        component: () => new (class{
-    })
-}
-
 const api = {
     main: { path: "/" },
+}
+
+const fusion = {
+    hocs: ['alert'],
+    component: () => {}
 }
 
 test("Hoc should trigger thunks", () => {
@@ -87,6 +86,7 @@ test("Hoc should trigger thunks", () => {
     })()
 
     const permhoc = hocBuilder({
+        apis:[api],
         reduxers: [reduxer],
         hocs: {
             alert: Component => Component,
@@ -114,6 +114,7 @@ test("Hoc should trigger thunks", () => {
     })
 
     const fushoc = hocBuilder({
+        apis:[api],
         reduxers: [reduxer],
         hocs: {
             alert: Component => Component,
@@ -137,6 +138,7 @@ test("Hoc should trigger thunks", () => {
         }
     })
     const hoc = hocBuilder({
+        apis:[api],
         reduxers: [reduxer],
         hocs: {
             alert: Component => Component,
@@ -162,11 +164,11 @@ test("Hoc should trigger thunks", () => {
     })
 
 
-    const Simple = hoc([], ["age", "name", "firstname"], ["thunkFirstname"])(ThunkedCompo)
-    expect(typeof Simple).toBe("object")
+    const Simple = hoc("age", "name", "firstname", "thunkFirstname")(ThunkedCompo)
+    expect(typeof Simple).toBe("function")
 
     let { container } = render(
-        <Store hocs={[hoc, true]} apis={[api]}>
+        <Store hocs={[hoc, true]}>
             <Simple />
         </Store>
     )
@@ -175,98 +177,40 @@ test("Hoc should trigger thunks", () => {
     expect(container).toHaveTextContent("my new first name")
     expect(container).toHaveTextContent("456123")
 
-    const Double = hoc(["age", "name", "firstname"], true)(ThunkedCompo)
-    expect(typeof Double).toBe("object")
-
-    let { container:doubleContainer } = render(
-        <Store hocs={[hoc, true]} apis={[api]}>
-            <Double />
-        </Store>
-    )
-
-    expect(doubleContainer).toHaveTextContent("my second name")
-    expect(doubleContainer).toHaveTextContent("my new first name")
-    expect(doubleContainer).toHaveTextContent("456123")
-
-    const Triple = hoc(true)(ThunkedCompo)
-    expect(typeof Triple).toBe("object")
-
-    let { container:tripleContainer } = render(
-        <Store hocs={[hoc, true]} apis={[api]}>
-            <Triple />
-        </Store>
-    )
-
-    const Quatro = hoc([], true)(ThunkedCompo)
-    expect(typeof Quatro).toBe("object")
+    const Quatro = hoc()(NoApiCompo)
+    expect(typeof Quatro).toBe("function")
 
     let { container:quatroContainer } = render(
-        <Store hocs={[hoc, true]} apis={[api]}>
+        <Store hocs={[hoc, true]}>
             <Quatro />
         </Store>
     )
-
-    const Cinquo = hoc(['thunkFirstname'])(ThunkedCompo)
-    expect(typeof Cinquo).toBe("object")
-
-    let { container:cinquoContainer } = render(
-        <Store hocs={[hoc, true]} apis={[api]}>
-            <Cinquo />
-        </Store>
-    )
-
-    const Sexo = hoc(['alert', 'customize'], ['thunkFirstname'])(ThunkedCompo)
-    expect(typeof Sexo).toBe("function")
-
-    let { container:sexoContainer } = render(
-        <Store hocs={[hoc, true]} apis={[api]}>
-            <Sexo />
-        </Store>
-    )
-
-    const Setto = fushoc(['alert', 'customize', 'invalid'], ['thunkFirstname'])(ThunkedCompo)
+    const Setto = fushoc('alert', 'customize', 'invalid', 'thunkFirstname')(ThunkedCompo)
     expect(typeof Setto).toBe("function")
 
     let { container:settoContainer } = render(
-        <Store hocs={[fushoc, true]} apis={[api]}>
+        <Store hocs={[fushoc, true]}>
             <Setto />
         </Store>
     )
 
-    const Otto = fushoc()(ThunkedCompo)
-    expect(typeof Otto).toBe("object")
+const Sub = new (class {
+    state = { subject: "mySubject" }
+    reduxers = ["name"]
+    thunks= ['setNewName', 'setName']
 
-    let { container:ottoContainer } = render(
-        <Store hocs={[fushoc, true]} apis={[api]}>
-            <Otto />
-        </Store>
-    )
+    renderSubject() {
+        return <span>{this.state.subject}</span>
+    }
+})()
 
-    const Novo = fushoc()(false, ThunkedCompo)
-    expect(typeof Novo).toBe("object")
+
+    const Novo = fushoc()(false, NoApiCompo, Sub)
+    expect(typeof Novo).toBe("function")
 
     let { container:novoContainer } = render(
-        <Store hocs={[fushoc, true]} apis={[api]}>
+        <Store hocs={[fushoc, true]}>
             <Novo />
-        </Store>
-    )
-
-    const T10 = permhoc('alert', 'customize', 'invalid', 'thunkFirstname')(ThunkedCompo)
-    expect(typeof T10).toBe("object")
-
-    let { container:t10Container } = render(
-        <Store hocs={[permhoc, true]} apis={[api]}>
-            <T10 />
-        </Store>
-    )
-
-    NoApiCompo.useApi = false
-    const T11 = permhoc('thunkFirstname', 'name')(NoApiCompo)
-    expect(typeof T11).toBe("object")
-
-    let { container:t11Container } = render(
-        <Store hocs={[permhoc]} apis={[api]}>
-            <T11 />
         </Store>
     )
 })

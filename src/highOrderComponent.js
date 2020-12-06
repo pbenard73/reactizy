@@ -4,7 +4,6 @@ import { connect } from "react-redux"
 
 import each from "./each"
 import autobind from "./autobind"
-import Context from "./Context"
 import Api from "./Api"
 
 export default function withReactify(WrappedComponent, ...parts) {
@@ -26,8 +25,6 @@ export default function withReactify(WrappedComponent, ...parts) {
 
     let staticState = WrappedComponent.reduxers
     let staticThunks = WrappedComponent.thunks !== undefined ? WrappedComponent.thunks : {}
-    let thunkOptions = WrappedComponent.thunkOptions !== undefined ? WrappedComponent.thunkOptions : { name: "call", api: "true" }
-    const useApi = WrappedComponent.useApi === false ? false : thunkOptions.api !== false 
 
     const isArray = item => [null, undefined].indexOf(item) === -1 && item.constructor.name.toLowerCase() === "array"
 
@@ -106,67 +103,5 @@ export default function withReactify(WrappedComponent, ...parts) {
         return properties
     }
 
-
-    /**
-     * Affect redux actions and thunks to props
-     */
-    let mapActionsToProps = { ...staticThunks }
-
-    const callDispatch = (type, ...args) => {
-        if (staticThunks[type] === undefined) {
-            return { type, payload: args[0] !== undefined ? args[0] : {} }
-        }
-
-        return staticThunks[type](...args)
-    }
-
-    mapActionsToProps[thunkOptions.name] = callDispatch
-
-    /**
-     * Connect component with redux
-     */
-    let Component = connect(mapStateToProps, mapActionsToProps)(myComponent)
-
-    if (useApi === false) {
-        return Component
-    }
-
-    /**
-     * Apply the api behaviour
-     */
-    const apiFunctions = (context, url = false) => {
-        return (routeName, ...args) => {
-            let route = context.api[routeName]
-
-            if (route === undefined) {
-                return new Error(`Api route ${routeName} is not registered`)
-            }
-
-            return url === false ? Api.call(route, ...args) : Api.url(route, ...args)
-        }
-    }
-
-    const MyHoc = () => {
-        const HOC = (props, forwardedRef) => (
-            <Context.Consumer>
-                {value => {
-                    let apiProps = {}
-                    if ([null, undefined].indexOf(value) === -1 && value.api.length !== 0) {
-                        apiProps = {
-                            api: {
-                                call: apiFunctions(value),
-                                url: apiFunctions(value, true),
-                            },
-                        }
-                    }
-
-                    return <Component {...props} {...apiProps} ref={forwardedRef} />
-                }}
-            </Context.Consumer>
-        )
-
-        return React.forwardRef(HOC)
-    }
-
-    return MyHoc(Component)
+    return connect(mapStateToProps, staticThunks)(myComponent)
 }
