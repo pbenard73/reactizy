@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/reactizy/static/css/main.e78aed32.chunk.css",
-    "main.js": "/reactizy/static/js/main.860be50d.chunk.js",
-    "main.js.map": "/reactizy/static/js/main.860be50d.chunk.js.map",
+    "main.js": "/reactizy/static/js/main.6c5c6cc3.chunk.js",
+    "main.js.map": "/reactizy/static/js/main.6c5c6cc3.chunk.js.map",
     "runtime-main.js": "/reactizy/static/js/runtime-main.c3647b05.js",
     "runtime-main.js.map": "/reactizy/static/js/runtime-main.c3647b05.js.map",
     "static/css/2.72ebba26.chunk.css": "/reactizy/static/css/2.72ebba26.chunk.css",
     "static/js/2.3fcae6a0.chunk.js": "/reactizy/static/js/2.3fcae6a0.chunk.js",
     "static/js/2.3fcae6a0.chunk.js.map": "/reactizy/static/js/2.3fcae6a0.chunk.js.map",
     "index.html": "/reactizy/index.html",
-    "precache-manifest.629f19b0db556d4bcc51cbc10ea14ea5.js": "/reactizy/precache-manifest.629f19b0db556d4bcc51cbc10ea14ea5.js",
+    "precache-manifest.7bbf4d4d9c054766faed5f2feb20ba0a.js": "/reactizy/precache-manifest.7bbf4d4d9c054766faed5f2feb20ba0a.js",
     "service-worker.js": "/reactizy/service-worker.js",
     "static/css/2.72ebba26.chunk.css.map": "/reactizy/static/css/2.72ebba26.chunk.css.map",
     "static/css/main.e78aed32.chunk.css.map": "/reactizy/static/css/main.e78aed32.chunk.css.map",
@@ -20,6 +20,6 @@
     "static/css/2.72ebba26.chunk.css",
     "static/js/2.3fcae6a0.chunk.js",
     "static/css/main.e78aed32.chunk.css",
-    "static/js/main.860be50d.chunk.js"
+    "static/js/main.6c5c6cc3.chunk.js"
   ]
 }
