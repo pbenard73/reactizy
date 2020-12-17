@@ -11,10 +11,14 @@ function getUrl(route, options = {}) {
     let queryParams = []
 
     for (var i = optionKeys.length - 1; i >= 0; i--) {
-        if (routePath.indexOf(optionKeys[i]) !== -1) {
-            routePath = routePath.replace(":" + optionKeys[i], options[optionKeys[i]])
+        const value = options[optionKeys[i]]
+
+        if (value === undefined) {
+            continue
+        } else if (routePath.indexOf(optionKeys[i]) !== -1) {
+            routePath = routePath.replace(":" + optionKeys[i], value)
         } else {
-            queryParams.push(`${optionKeys[i]}=${options[optionKeys[i]].toString()}`)
+            queryParams.push(`${optionKeys[i]}=${value.toString()}`)
         }
     }
 

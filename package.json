@@ -1,6 +1,6 @@
 {
   "name": "reactizy",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "description": "Reactizy is a React High Order Component and a toolkit allowing to simplify to use of react-redux, providing asynchronous reducers, permitting to split *react components* in order to have a better readability, call api with simply library and some usefull utilities.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

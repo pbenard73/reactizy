@@ -218,7 +218,7 @@ const builder = (givenObject = {}) => {
                 return checkReduxers(Component, pool.state, pool.actions)
             }
 
-            return compose(...getUses([...pool.use, ...hocFusionData.hocs]))(
+            return compose(...getUses([...pool.use, ...(mergeHocFusion === true ? hocFusionData.hocs : [])]))(
                 checkReduxers(Component, pool.state, pool.actions)
             )
         }
