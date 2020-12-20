@@ -104,6 +104,15 @@ const builder = (givenObject = {}) => {
     })
 
     /**
+     * Attach generic thunk caller
+     */
+    thunkActions[options.name] = (name, ...args) => {
+        return function (dispatch, getState) {
+            performDispatch(dispatch, name)(...args)
+        }
+    }
+
+    /**
      * Attach reduxer actions to actionPool
      */
     each(reduxActionsKeys, actionName => {

@@ -13,7 +13,7 @@ function getUrl(route, options = {}) {
     for (var i = optionKeys.length - 1; i >= 0; i--) {
         const value = options[optionKeys[i]]
 
-        if (value === undefined) {
+        if (value === undefined || value.toString === undefined) {
             continue
         } else if (routePath.indexOf(optionKeys[i]) !== -1) {
             routePath = routePath.replace(":" + optionKeys[i], value)
