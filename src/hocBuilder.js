@@ -15,8 +15,9 @@ const builder = (givenObject = {}) => {
     const givenApis = givenObject.apis !== undefined ? givenObject.apis : []
     let initialReduxers = givenObject.reduxers !== undefined ? [...givenObject.reduxers] : []
     let hocFusion = givenObject.fusion !== undefined ? [...givenObject.fusion] : []
-    let options = givenObject.options !== undefined ? givenObject.options : { name: "call", permissive: false }
+    let options = givenObject.options !== undefined ? givenObject.options : { name: "call", bindAll: false }
     options.name = options.name !== undefined ? options.name : "call"
+    options.bindAll = options.bindAll !== undefined ? options.bindAll : false
     const keyPool = Object.keys({ ...hocs, ...customs })
     let cleanedFusion = []
 
@@ -145,7 +146,7 @@ const builder = (givenObject = {}) => {
             /**
              * Return reactizy has nothing to proceed
              */
-            if (args.length === 0 && hocFusionData.hocs.length === 0) {
+            if (args.length === 0 && hocFusionData.hocs.length === 0 && options.bindAll === false) {
                 if (hasApi === true) {
                     return apiHoc(withReactizy(Component, ...fusion))
                 }
@@ -213,15 +214,21 @@ const builder = (givenObject = {}) => {
                 actions: [],
             }
 
-            each(args, key => {
-                if (hocs[key] !== undefined || customs[key] !== undefined) {
-                    pool.use.push(key)
-                } else if (reduxStateKeys.indexOf(key) !== -1) {
-                    pool.state.push(key)
-                } else if (thunkActions[key] !== undefined) {
-                    pool.actions.push(key)
-                }
-            })
+            if (options.bindAll === true) {
+                pool.use = [...Object.keys(hocs), ...Object.keys(customs)]
+                pool.state = [...reduxStateKeys]
+                pool.actions = [...Object.keys(thunkActions)]
+            } else {
+                each(args, key => {
+                    if (hocs[key] !== undefined || customs[key] !== undefined) {
+                        pool.use.push(key)
+                    } else if (reduxStateKeys.indexOf(key) !== -1) {
+                        pool.state.push(key)
+                    } else if (thunkActions[key] !== undefined) {
+                        pool.actions.push(key)
+                    }
+                })
+            }
 
             if (pool.use.length === 0 && hocFusionData.hocs.length === 0) {
                 return checkReduxers(Component, pool.state, pool.actions)
