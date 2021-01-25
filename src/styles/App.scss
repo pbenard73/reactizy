@@ -1,0 +1,88 @@
+html {
+    height: 100%;
+    background: linear-gradient(45deg, #aba8a8, transparent);
+    background-attachment: fixed;
+    color:#2a2a2a;
+}
+
+html, body {
+    margin:0;
+}
+
+body {
+    min-height: 100%;
+}
+
+h1 {
+    font-size: 35px;
+    margin-top: 0;
+}
+
+a {
+    color: #15829e;
+}
+
+.wrapper{
+    padding-top: 80px;
+    display:flex;
+    flex-direction:row;
+    .content{
+        width: calc(100% - 330px);
+        padding: 15px;
+        padding-left:265px;
+    }
+}
+
+@media screen and (max-width: 769px) {
+    .wrapper{
+        flex-direction: column;
+        .content{
+            padding-left:15px;
+                width: calc(100% - 70px);
+            ul {
+                margin-left: 15px;
+            }
+        }
+    }
+}
+
+::selection {
+    text-shadow: 0 0 4px #1b829e;
+    color: #55d1f3;
+    background:black;
+}
+
+::-moz-selection{
+    text-shadow: 0 0 4px #1b829e;
+    background:black;
+    color: #55d1f3;
+}
+
+
+::-webkit-scrollbar-track
+{
+    background-color: #ececec;
+}
+
+::-webkit-scrollbar
+{
+    width: 12px;
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #1b829e;
+}
+
+.aws-btn{
+    --button-primary-color: #f1efef;
+    --button-primary-color-dark: #187993;
+    --button-primary-color-light: #2a2a2a;
+    --button-primary-color-hover: #eaeaea;
+    --button-primary-border: 1px solid #187993;
+        &.aws-btn--active .aws-btn__wrapper .aws-btn__content {
+        --button-primary-color-active: #cfdee9;
+    }
+}

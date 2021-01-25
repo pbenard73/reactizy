@@ -5,7 +5,7 @@ export const fusion: typeof src_fusion;
 export const withReactizy: typeof highOrderComponent;
 export const reduxer: typeof src_reduxer;
 export const Store: {
-    (props: any): any;
+    (props: any): JSX.Element;
     propTypes: {
         hocs: any;
         children: any;
@@ -18,7 +18,7 @@ export const hocBuilder: (givenObject?: {}) => {
     (...args: any[]): (NoFusionComponent: any, ...componentOrFusion: any[]) => any;
     reduxers: any[];
 };
-export const hocCreator: (methodName: any, method: any) => (Component: any) => (props: any) => any;
+export const hocCreator: (methodName: any, method: any) => (Component: any) => (props: any) => JSX.Element;
 import src_autobind from "./autobind";
 import src_fusion from "./fusion";
 import highOrderComponent from "./highOrderComponent";

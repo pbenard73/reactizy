@@ -1,29 +1,20 @@
-import SrcStore from "./Store"
-import src_autobind from "./autobind"
-import src_domainize from "./domainize"
-import src_fusion from "./fusion"
-import highOrderComponent from "./highOrderComponent"
-import src_reduxer from "./reduxer"
-import store from "./createStore"
-import src_hocBuilder from "./hocBuilder"
-import src_hocCreator from "./hocCreator"
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './App';
+import * as serviceWorker from './serviceWorker';
+import { HashRouter as Router } from 'react-router-dom'
 
-export const reactizy = function(...args) { src_fusion.call(this, ...args); src_autobind.call(this)}
+ReactDOM.render(
+  <React.StrictMode>
+    <Router>
+    <App />
+    </Router>
+  </React.StrictMode>,
+  document.getElementById('root')
+);
 
-export const autobind = src_autobind
-
-export const domainize = src_domainize
-
-export const fusion = src_fusion
-
-export const withReactizy = highOrderComponent
-
-export const reduxer = src_reduxer
-
-export const Store = SrcStore
-
-export const createStore = store
-
-export const hocBuilder = src_hocBuilder
-
-export const hocCreator = src_hocCreator
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://bit.ly/CRA-PWA
+serviceWorker.unregister();

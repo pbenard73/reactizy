@@ -1,0 +1,31 @@
+.topbar {
+    background: linear-gradient(90deg, #e2e2e2, #e8e7e7);
+    color: #2a2a2a !important;
+    > div {
+        width: calc(100% - 50px);
+    }
+    h5 {
+        font-family: "Allerta Stencil", sans-serif;
+        font-size: 32px;
+        + div {
+            margin-left: auto;
+            svg {
+                color: #2a2a2a;
+            }
+        }
+    }
+    #top_menu{
+        margin-right:15px;
+    }
+}
+
+@media screen and (min-width:770px) {
+    .topbar {
+        > div {
+        width: calc(100% - 35px);
+        }
+        #top_menu{
+            display:none
+        }
+    }
+}
