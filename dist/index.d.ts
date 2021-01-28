@@ -1,4 +1,5 @@
 export function reactizy(...args: any[]): void;
+export const staty: (...stateKeys: any[]) => {};
 export const autobind: typeof src_autobind;
 export const domainize: (domain: any, apiPool: any) => {};
 export const fusion: typeof src_fusion;

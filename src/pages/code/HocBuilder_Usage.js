@@ -12,4 +12,7 @@ export default Hoc(...uses, ...state, ...actions)(Component)
 export default Hoc(...uses, ...state, ...actions)(false, Component)
 
 export default Hoc()(Component, Splitted, OtherSplitted)
+
+// It will affect all registered uses, state, and actions
+export default Hoc(true)(Component)
 `

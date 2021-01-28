@@ -6,6 +6,7 @@ import reduxerOne from "./code/GetStarted_ReduxOne"
 import reduxerTwo from "./code/GetStarted_ReduxTwo"
 import storeCreation from "./code/GetStarted_Store"
 import usage from "./code/GetStarted_Usage"
+import staty from "./code/Redux_Staty"
 
 export default () => (
     <section name='get started' className='get_started'>
@@ -30,5 +31,13 @@ export default () => (
 
         <h2>Usage in Components</h2>
         <Code>{usage}</Code>
+
+	<h2>Tips</h2>
+
+	<h3>staty</h3>
+	<p>If some base state update must be triggered, you can use the <code>staty</code> function in order to simplify this actions </p>
+        <Code>{staty}</Code>
+
+
     </section>
 )

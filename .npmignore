@@ -2,6 +2,7 @@ src/
 lib/
 public/
 build/
+docs/
 package-lock.json
 webpack.config.js
 coverage/
