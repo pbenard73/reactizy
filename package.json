@@ -1,6 +1,6 @@
 {
   "name": "reactizy",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "description": "Reactizy is a React High Order Component and a toolkit allowing to simplify use of react-redux, providing asynchronous reducers, permitting to split *react components* in order to have a better readability, call api with simply library and some usefull utilities.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -59,6 +59,7 @@
     "@babel/polyfill": "^7.12.1",
     "axios": "^0.21.1",
     "prop-types": ">=15.7.2",
+    "qs": "^6.7.0",
     "react-dom": ">=16.13.1",
     "react-redux": ">=7.2.1",
     "redux": ">=4.0.5",

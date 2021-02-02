@@ -62,6 +62,8 @@ export default () => (
         <h3>Options</h3>
 
         <p>Actually the options takes the <code>name</code> key representing the property name to call the thunks actions and generic redux actions.</p>
+	<p>The <code>bindAll</code> (boolean) binds every thing to every components</p>
+	<p>The <code>pure</code> (string) is the hoc method to simply connect to the redux store</p>
 
         <h2>Usage in component</h2>
 

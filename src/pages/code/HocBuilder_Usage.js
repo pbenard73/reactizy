@@ -15,4 +15,7 @@ export default Hoc()(Component, Splitted, OtherSplitted)
 
 // It will affect all registered uses, state, and actions
 export default Hoc(true)(Component)
+
+// Simply connect to the redux store with given actions and states
+export default Hoc.pure(...state, ...actions)(Component)
 `

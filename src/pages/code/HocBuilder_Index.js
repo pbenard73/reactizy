@@ -27,7 +27,9 @@ export default hocBuilder({
     },
     fusion: [SplittedCompo],
     options: {
-        name: 'execute' // default 'call'
+        name: 'execute', // default 'call' => props name to dispatch action,
+        bindAll: false // default false => bind every thing in every 'hoced' components,
+        pure: 'pure' // default 'pure' => hoc method to simply connect to redux store
     }
 })
 `
