@@ -10,7 +10,7 @@ class EcoloReducer {
 
     actions = {
 	    ...staty('fruit', 'tree'),
-	    vegetable: staty('vegetable')
+	    setVegetable: staty('vegetable', true)
     }
 }
 

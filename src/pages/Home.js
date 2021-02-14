@@ -8,7 +8,7 @@ export default () => (
     <section name="homepage">
         <h1>Reactizy</h1>
 
-        <p><small>v5.0.3</small></p>
+        <p><small>v5.0.4</small></p>
 
         <p><b>Reactizy</b> is a <b>React High Order Component</b> and a toolkit allowing</p>
         <p>
