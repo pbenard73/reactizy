@@ -20,6 +20,13 @@ export const hocBuilder: (givenObject?: {}) => {
     reduxers: any[];
 };
 export const hocCreator: (methodName: any, method: any) => (Component: any) => (props: any) => JSX.Element;
+export const combine: (name: any, reducer: any) => {
+    name: any;
+    actions: any;
+    state: any;
+    thunks: any;
+    isCombined: boolean;
+};
 import src_autobind from "./autobind";
 import src_fusion from "./fusion";
 import highOrderComponent from "./highOrderComponent";

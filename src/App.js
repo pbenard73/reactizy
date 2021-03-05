@@ -7,6 +7,7 @@ import { Route, Switch } from "react-router-dom"
 
 import Home from "./pages/Home"
 import Api from "./pages/Api"
+import Combined from "./pages/Combined"
 import GetStarted from "./pages/GetStarted"
 import HocBuilder from "./pages/HocBuilder"
 import Redux from "./pages/Redux"
@@ -22,6 +23,7 @@ const map = [
     ["/redux-and-reduxers", Redux],
     ["/splitter", Splitter],
     ["/autobind", Autobind],
+    ["/combined-reduxers", Combined]
 ]
 
 const App = () => {

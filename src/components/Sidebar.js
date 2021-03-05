@@ -15,6 +15,7 @@ const map = [
     ['/get-started', 'Get Started'],
     ['/redux-and-reduxers', 'Redux and Reduxers'],
     ['/hoc-builder', 'Hoc Builder'],
+    ['/combined-reduxers', 'Combined Reduxer - Redux Objects'],
     ['/splitter', 'Splitter'],
     ['/api', 'Api'],
     ['/autobind', 'Autobind'],

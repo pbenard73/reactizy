@@ -52,4 +52,4 @@ const uses = ['alert', 'sayHello']
 const state = ['user', 'receipeToCook']
 const actions = ['login', 'logout', 'addToCook', 'complexLogin'] 
 
-export default Hoc(...uses, ...state, ...actions)(App)`
+export default Hoc(...uses, ...state, ...actions)(MyComponent)`
