@@ -11,7 +11,7 @@ class RestaurantReducer {
     actions = staty('places', 'tables', 'chairs')
 
     thunks = {
-        asyncPlaces: number => dispatch => setTimeout(() => dispatch('restaurant.setPlaces', number), 2000)
+        asyncPlaces: (dispatch, getState, number) => setTimeout(() => dispatch('restaurant.setPlaces', number), 2000)
     }
 }
 

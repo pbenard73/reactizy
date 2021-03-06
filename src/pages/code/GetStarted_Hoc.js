@@ -14,7 +14,7 @@ export default hocBuilder({
         router: withRouter
     },
     thunks: {
-        complexLogin: user => (dispatch, getState, user) => {
+        complexLogin: (dispatch, getState, user) => {
             setTimeout(() => dispatch('login', user), 2000)
         }
     },
