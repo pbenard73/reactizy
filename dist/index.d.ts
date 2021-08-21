@@ -27,7 +27,9 @@ export const combine: (name: any, reducer: any) => {
     thunks: any;
     isCombined: boolean;
 };
+export const useMultiState: typeof src_useMultiState;
 import src_autobind from "./autobind";
 import src_fusion from "./fusion";
 import highOrderComponent from "./highOrderComponent";
 import src_reduxer from "./reduxer";
+import src_useMultiState from "./useMultiState";
