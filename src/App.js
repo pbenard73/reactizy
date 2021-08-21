@@ -13,6 +13,7 @@ import HocBuilder from "./pages/HocBuilder"
 import Redux from "./pages/Redux"
 import Autobind from "./pages/Autobind"
 import Splitter from "./pages/Splitter"
+import MultiState from "./pages/MultiState"
 
 import "./styles/App.scss"
 
@@ -23,7 +24,8 @@ const map = [
     ["/redux-and-reduxers", Redux],
     ["/splitter", Splitter],
     ["/autobind", Autobind],
-    ["/combined-reduxers", Combined]
+    ["/useMultiState", MultiState],
+    ["/combined-reduxers", Combined],
 ]
 
 const App = () => {
@@ -33,7 +35,7 @@ const App = () => {
         <div className='App'>
             <Header toggleMenu={() => setOpen(!open)} />
             <div className='wrapper'>
-                <Sidebar open={open} closeMenu={() => setOpen(false)}/>
+                <Sidebar open={open} closeMenu={() => setOpen(false)} />
                 <div className='content'>
                     <Switch>
                         {map.map(item => (

@@ -19,6 +19,7 @@ const map = [
     ['/splitter', 'Splitter'],
     ['/api', 'Api'],
     ['/autobind', 'Autobind'],
+    ['/useMultiState', 'MultiState Hook'],
 ]
 
 export default props => (
