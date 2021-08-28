@@ -1,13 +1,20 @@
-import React from 'react'
+import React from "react"
+import PropTypes from "prop-types"
 
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
 
-import { coy } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import style from "react-syntax-highlighter/dist/esm/styles/prism/vs-dark"
 
-import './../styles/Code.scss'
+import "./../styles/Code.scss"
 
-export default props => (
-    <SyntaxHighlighter language="javascript" style={coy} className="code_wrapper">
-      {props.children}
-    </SyntaxHighlighter>    
+const Code = ({ children }) => (
+    <SyntaxHighlighter language='javascript' style={style} className='code_wrapper nodrag'>
+        {children}
+    </SyntaxHighlighter>
 )
+
+Code.propTypes = {
+    children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
+}
+
+export default Code

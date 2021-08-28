@@ -1,4 +1,5 @@
 import React from "react"
+import PropTypes from "prop-types"
 
 import { List, ListItem } from "@material-ui/core"
 
@@ -11,28 +12,34 @@ import "react-awesome-button/src/styles/styles.scss"
 import "./../styles/Sidebar.scss"
 
 const map = [
-    ['/', 'Home'],
-    ['/get-started', 'Get Started'],
-    ['/redux-and-reduxers', 'Redux and Reduxers'],
-    ['/hoc-builder', 'Hoc Builder'],
-    ['/combined-reduxers', 'Combined Reduxer - Redux Objects'],
-    ['/splitter', 'Splitter'],
-    ['/api', 'Api'],
-    ['/autobind', 'Autobind'],
-    ['/useMultiState', 'MultiState Hook'],
+    ["/", "Home"],
+    ["/get-started", "Get Started"],
+    ["/redux-and-reduxers", "Redux and Reduxers"],
+    ["/hoc-builder", "Hoc Builder"],
+    ["/combined-reduxers", "Combined Reduxer - Redux Objects"],
+    ["/splitter", "Splitter"],
+    ["/api", "Api"],
+    ["/autobind", "Autobind"],
+    ["/useMultiState", "MultiState Hook"],
 ]
 
-export default props => (
-    <div className={`sidebar ${props.open === true ? 'open' : ''}`}>
+const Sidebar = ({ closeMenu, open }) => (
+    <div className={`sidebar ${open === true ? "open" : ""}`}>
         <List>
-            {map.map(item => {
-                return (
-                <ListItem>
-                    <Link to={item[0]} onClick={props.closeMenu}>
+            {map.map(item => (
+                <ListItem key={item[0]}>
+                    <Link to={item[0]} onClick={closeMenu}>
                         <AwesomeButton>{item[1]}</AwesomeButton>
                     </Link>
                 </ListItem>
-            )})}
+            ))}
         </List>
     </div>
 )
+
+Sidebar.propTypes = {
+    closeMenu: PropTypes.func,
+    open: PropTypes.bool,
+}
+
+export default Sidebar
