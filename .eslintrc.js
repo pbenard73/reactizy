@@ -4,7 +4,6 @@ module.exports = {
         "es2021": true
     },
     "extends": [
-        "prettier",
         "eslint:recommended",
         "plugin:react/recommended"
     ],
@@ -34,7 +33,8 @@ module.exports = {
         "semi": [
             "error",
             "never"
-        ]
+        ],
+        "no-irregular-whitespace": ["error", { "skipTemplates": true }]
     },
     "settings": {
         "react": {

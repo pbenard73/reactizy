@@ -17,43 +17,68 @@
         <noscript>You need to enable JavaScript to run this app.</noscript>
         <div id="root">
             <style>
-    html {
-        height: 100%;
-        background: linear-gradient(45deg, #aba8a8, transparent);
-        background-attachment: fixed;
-        color: #2a2a2a;    
-    }
+  html {
+      height: 100%;
+  }
 
     html, body {
         margin:0;
     }
 
-    body {
-        min-height: 100%;
-    }
-    .intro {
-        height:100vh;
-        display:flex;
-        flex-direction:column;
-        flex-align:center;
-        justify-content:center;
-    }
-    .intro h1 {
-        margin-top:0;
-        text-align:center;
-        font-family: 'Allerta Stencil', sans-serif;
-        font-size: 55px;
-        font-weight:500;
+  body {
+      min-height: 100%;
+  }
+  #root{
+      background-image: url(/reactizy/bg.jpg);
+      background-size:cover;
+      background-position:center;
+      height:100vh;
+  }
+   #root .hero {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+   }
+   #root .hero h1, #root .hero h2 {
+            position: relative;
+            font-size: 65px;
+            font-weight: 400;
+            margin: 0 0 20px 0;
+            font-family: "Allerta Stencil", sans-serif;
+            background: linear-gradient(to right, #464646 calc(20% + 5px), #808080 calc(20% + 10px), #464646 30%);
+            background-size: 200% auto;
+            background-clip: text;
+            text-fill-color: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 6s linear infinite;
+   }
+    #root .hero h1:before {
+                content: "Reactizy";
+                position: absolute;
+                text-shadow: 0px 0px 3px #da0000, 2px 2px 3px #ffffff;
+                color: black;
+                z-index: -1;
+            }
+        }
 
-    }
-    p {text-align:center;}
+     #root .hero  h2 {
+            margin: 0;
+            background-image: linear-gradient(to right, #b9b7b7 calc(20% + 5px), #ffa115 calc(20% + 10px), #b9b7b7 30%);
+            animation: shiner 6s linear infinite;
+            font-size: 20px;
+        }
             </style>
-            <div class='intro'>
+            <div class='hero'>
                 <h1>Reactizy</h1>
-                <p>please wait ...</p>
+                <p style="color:white;">please wait ...</p>
             </div>
         </div>
+       
         <link href="https://fonts.googleapis.com/css2?family=Allerta+Stencil&display=swap" rel="stylesheet">
-
     </body>
 </html>

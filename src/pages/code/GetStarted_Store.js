@@ -8,7 +8,7 @@ import Hoc from './hocs/Hoc'
 
 ReactDOM.render(
   <React.StrictMode>
-    <Store hocs={[Hoc]}>
+    <Store pool={[Hoc]}>
        <App />
     </Store>
   </React.StrictMode>,

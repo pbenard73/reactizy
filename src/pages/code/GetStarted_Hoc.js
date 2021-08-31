@@ -1,5 +1,5 @@
 export default `/* src/hocs/Hoc.js */
-import { hocBuilder } from 'reactizy'
+import { hocBuilder } from 'reactizy/core/class'
 import { withRouter } from 'react-dom-router'
 import { withAlert } from 'react-alert'
 import login from './../reduxers/login'
@@ -13,14 +13,21 @@ export default hocBuilder({
         alert: withAlert(),
         router: withRouter
     },
-    thunks: {
-        complexLogin: (dispatch, getState, user) => {
-            setTimeout(() => dispatch('login', user), 2000)
-        }
-    },
     customs: {
         sayHello: function(name) {
             window.alert(\`Hello $\{name}\`)
         }
+    },
+
+    /**
+     * This options can be given
+     */
+    /*
+    options: {
+      bindAll: true // Will bind every thing to the hoc, no need to pass args,
+      name: 'call' // The dispatch function name provided by the hoc
     }
-)`
+    */
+)
+
+`

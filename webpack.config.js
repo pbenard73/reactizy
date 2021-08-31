@@ -5,13 +5,17 @@ const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
     mode:'production',
-  entry: './lib/index.js',
+  entry: {
+    index: './lib/index.js',
+    class: './lib/indexClass.js',
+    hookBuilder: './lib/hookBuilder.js',
+  },
   externals: [nodeExternals()],
   output: {
-    filename: 'index.js',
-    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].js',
+    path: path.resolve(__dirname, 'core'),
     library: '',
-    libraryTarget: 'commonjs'
+    libraryTarget: 'commonjs-module'
   },
   plugins: [new CleanWebpackPlugin()],
   module: {

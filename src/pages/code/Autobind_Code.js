@@ -1,6 +1,6 @@
 export default `import React from 'react'
 
-import { autobind } from 'reactizy'
+import { autobind } from 'reactizy/core/class'
 
 class Page extends React.Component {
     constructor(props) {
