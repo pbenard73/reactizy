@@ -1,5 +1,5 @@
 export default `import React from 'react'
-import { withReactizy } from 'reactizy'
+import { withReactizy } from 'reactizy/core/class'
 
 const Compo = props => {
     const click = () => {

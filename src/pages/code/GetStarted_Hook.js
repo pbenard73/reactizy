@@ -15,6 +15,7 @@ const useReactizy = hookBuilder({
     options: {
       bindAll: true // Will bind every thing to the hoc, no need to pass args,
       name: 'call' // The dispatch function name provided by the hoc
+      apiHook: 'useApi' // The method to instanciate the api hook
     }
     */
 })

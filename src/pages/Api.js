@@ -5,6 +5,7 @@ import Code from "./../components/Code"
 import apiIndex from "./code/Api_Index"
 import apiPoolOne from "./code/Api_Pool"
 import apiPoolTwo from "./code/Api_Ext"
+import apiHook from "./code/Api_Hook"
 import apiUsage from "./code/Api_Usage"
 import apiMethods from "./code/Api_Methods"
 
@@ -37,6 +38,11 @@ const Api = () => (
         <h3>Methods</h3>
 
         <Code>{apiMethods}</Code>
+
+        <h3>Api Hook</h3>
+        <p>The Api hook method can be overrided in hookBuilder options</p>
+
+        <Code>{apiHook}</Code>
     </section>
 )
 
