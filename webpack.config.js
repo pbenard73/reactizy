@@ -7,7 +7,7 @@ module.exports = {
     mode:'production',
   entry: {
     index: './lib/index.js',
-    hocBuilder: './lib/indexClass.js',
+    class: './lib/indexClass.js',
     hookBuilder: './lib/hookBuilder.js',
   },
   externals: [nodeExternals()],

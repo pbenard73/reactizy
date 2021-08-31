@@ -12,10 +12,6 @@ class MyComponent extends React.Component {
         this.props.alert.info('Logout')
     }
 
-    asyncLoginBindThis() {
-        this.props.call('complexLogin', {user: window.prompt('New Username')})
-    }
-
     addReceipesBindThis() {
         this.props.addToCook(5)
     }
@@ -30,10 +26,7 @@ class MyComponent extends React.Component {
         return (
             <div className="App">
                 {this.props.user === null ? (
-                    <>
-                        <button onClick={this.askLogin}>Login</button>
-                        <button onClick={this.asyncLogin}>Login</button>
-                    </>
+                    <button onClick={this.askLogin}>Login</button>
                 ) : (
                     <button onClick={this.performLogout}>Logout</button>
                 )}

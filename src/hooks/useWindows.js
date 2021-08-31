@@ -5,6 +5,7 @@ import useReactizy from "./useReactizy"
 import Api from "./../pages/Api"
 import Combined from "./../pages/Combined"
 import GetStarted from "./../pages/GetStarted"
+import GetStartedHook from "./../pages/GetStartedHook"
 import Install from "./../pages/Install"
 import Autobind from "./../pages/Autobind"
 import MultiState from "./../pages/MultiState"
@@ -56,7 +57,7 @@ const useWindow = () => {
         _.addWindow({
             uuid: "get_started_hook",
             title: "Get Started with hook",
-            component: <GetStarted />,
+            component: <GetStartedHook />,
             center: true,
             options: {
                 size: [600, 350],

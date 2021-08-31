@@ -8,6 +8,14 @@ class LoginReducer {
         login: (state, user) => ({ ...state, user: user }),
         logout: state => ({ ...state, user: null }),
     }
+
+    thunks = {
+        loginAsync: (dispatch, getState, username) => {
+          setTimeout(() => {
+            dispatch('login', username)
+          }, 1000)
+        }
+    }
 }
 
 export default new LoginReducer()`

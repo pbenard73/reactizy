@@ -6,6 +6,7 @@ import AccountTreeIcon from "@material-ui/icons/AccountTree"
 import SchoolIcon from "@material-ui/icons/School"
 import BuildIcon from "@material-ui/icons/Build"
 import GavelIcon from "@material-ui/icons/Gavel"
+import GitHubIcon from "@material-ui/icons/GitHub"
 
 import useWindows from "./../hooks/useWindows"
 import Icon from "./../components/DashboardIcon"
@@ -19,7 +20,7 @@ const Dashboard = () => {
         <div className='dashboard'>
             <div className='hero'>
                 <h1>Reactizy</h1>
-                <h2>blabla</h2>
+                <h2>React toolkit to simplify the life</h2>
                 <small>v7.0.0</small>
             </div>
             <div className='icon_board'>
@@ -30,6 +31,15 @@ const Dashboard = () => {
                 <Icon icon={AccountTreeIcon} label={"Combined Reduxer"} onClick={windowManager.showCombined} />
                 <Icon icon={GavelIcon} label={"Class component utils"} onClick={windowManager.showClassTools} />
                 <Icon icon={BuildIcon} label={"Functionnal component tools"} onClick={windowManager.showFuncTools} />
+                <a
+                    href='https://github.com/pbenard73/reactizy'
+                    style={{ color: "inherit", textDecoration: "none" }}
+                    target='_blank'
+                    rel='noreferrer'
+                    className="github"
+                >
+                    <Icon icon={GitHubIcon} label={"See on Github"} onClick={windowManager.showFuncTools} />
+                </a>
             </div>
         </div>
     )

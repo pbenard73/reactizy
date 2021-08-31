@@ -1,5 +1,11 @@
 $textColor: #bdbdbd;
 
+@keyframes shiner {
+    to {
+        background-position: -200% center;
+    }
+}
+
 @keyframes shine {
     to {
         background-position: 200% center;
@@ -8,7 +14,7 @@ $textColor: #bdbdbd;
 
 .dashboard {
     height: 100vh;
-    overflow:auto;
+    overflow: auto;
     .hero {
         position: fixed;
         inset: 0;
@@ -17,7 +23,8 @@ $textColor: #bdbdbd;
         align-items: center;
         flex-direction: column;
         justify-content: center;
-        h1 {
+        h1,
+        h2 {
             position: relative;
             font-size: 65px;
             font-weight: 400;
@@ -40,6 +47,12 @@ $textColor: #bdbdbd;
         }
         h2 {
             margin: 0;
+            background-image: linear-gradient(to right, #b9b7b7 calc(20% + 5px), #ffa115 calc(20% + 10px), #b9b7b7 30%);
+            animation: shiner 6s linear infinite;
+            font-size: 20px;
+            &:before {
+                content: none;
+            }
         }
     }
 }
@@ -164,6 +177,17 @@ $textColor: #bdbdbd;
     }
 }
 
+@media screen and (min-width: 769px) {
+    .icon_board .github .icon {
+        transform: none;
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        &:before {
+            content: none;
+        }
+    }
+}
 @media screen and (max-width: 768px) {
     .dashboard .hero {
         justify-content: flex-end;
@@ -192,8 +216,8 @@ $textColor: #bdbdbd;
         height: 100vh !important;
         width: 100vw !important;
 
-        .decorator_toggle{
-          display:none !important;
+        .decorator_toggle {
+            display: none !important;
         }
     }
 }

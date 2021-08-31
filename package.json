@@ -1,9 +1,8 @@
 {
   "name": "reactizy",
-  "version": "6.0.2",
-  "description": "Reactizy is a React High Order Component and a toolkit allowing to simplify use of react-redux, providing asynchronous reducers, permitting to split *react components* in order to have a better readability, call api with simply library and some usefull utilities.",
+  "version": "7.0.0",
+  "description": "Reactizy is a React toolkit that simplify the life.",
   "main": "./core/index.js",
-  "types": "./core/*.d.ts",
   "homepage": "https://pbenard73.github.io/reactizy/",
   "repository": {
     "type": "git",
@@ -11,7 +10,7 @@
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "build": "rm -rf ./dist; ./node_modules/webpack/bin/webpack.js && npx tsc",
+    "build": "rm -rf ./dist; ./node_modules/webpack/bin/webpack.js",
     "doc": "react-scripts build",
     "test": "jest",
     "lint": "node_modules/eslint/bin/eslint.js --fix src/*",

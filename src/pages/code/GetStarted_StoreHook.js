@@ -4,11 +4,11 @@ import ReactDOM from 'react-dom';
 import App from './App';
 
 import { Store } from 'reactizy'
-import Hoc from './hocs/Hoc'
+import useReactizy from './hooks/useReactizy'
 
 ReactDOM.render(
   <React.StrictMode>
-    <Store pool={[Hoc]}>
+    <Store pool={[useReactizy]}>
        <App />
     </Store>
   </React.StrictMode>,

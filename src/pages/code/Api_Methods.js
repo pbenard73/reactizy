@@ -1,6 +1,6 @@
-export default `props.api.call(routeName, urlParams = {}, body = {}, extraOptions = {})
+export default `api.call(routeName, urlParams = {}, body = {}, extraOptions = {})
 
-props.api.url(routeName, urlParams = {})
+api.url(routeName, urlParams = {})
 
-props.api.call(stringUrl, urlParams = {}, body = {})
+api.call(stringUrl, urlParams = {}, body = {})
 `

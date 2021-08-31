@@ -8,7 +8,16 @@ const Screen = () => {
 
     const dashboard = <Dashboard />
 
-    return <Windows order={_.order} active={_.active} setActive={_.setActive} dashboard={dashboard} windows={_.windows} onClose={_.removeWindow} />
+    return (
+        <Windows
+            order={_.order}
+            active={_.active}
+            setActive={_.setActive}
+            dashboard={dashboard}
+            windows={_.windows}
+            onClose={_.removeWindow}
+        />
+    )
 }
 
 export default Screen

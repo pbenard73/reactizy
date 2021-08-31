@@ -1,23 +1,12 @@
-export default `/* src/hocs/Hoc.js */
-import { hocBuilder } from 'reactizy/core/class'
-import { withRouter } from 'react-dom-router'
-import { withAlert } from 'react-alert'
+export default `/* src/hooks/useReactizy.js */
+import hookBuilder from 'reactizy/core/hookBuilder'
 import login from './../reduxers/login'
 import receipe from './../reduxers/receipe'
 import api from './../api/main.js'
 
-export default hocBuilder({
+const useReactizy = hookBuilder({
     apis: [api],
     reduxers: [login, receipe],
-    hocs: {
-        alert: withAlert(),
-        router: withRouter
-    },
-    customs: {
-        sayHello: function(name) {
-            window.alert(\`Hello $\{name}\`)
-        }
-    },
 
     /**
      * This options can be given
@@ -28,6 +17,6 @@ export default hocBuilder({
       name: 'call' // The dispatch function name provided by the hoc
     }
     */
-)
+})
 
-`
+export default useReactizy`

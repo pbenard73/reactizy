@@ -6,7 +6,7 @@ import "./styles/App.scss"
 
 const App = () => {
     return (
-        <Store hocs={[hook, true]}>
+        <Store pool={[hook, true]}>
             <Screen />
         </Store>
     )
