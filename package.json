@@ -1,6 +1,6 @@
 {
   "name": "reactizy",
-  "version": "7.1.0",
+  "version": "7.1.1",
   "description": "Reactizy is a React toolkit that simplify the life.",
   "main": "./core/index.js",
   "homepage": "https://pbenard73.github.io/reactizy/",
