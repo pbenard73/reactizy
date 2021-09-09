@@ -5,9 +5,9 @@ class ReceipeReducer {
     }
 
     actions = {
-        increment: state => ({ ...state, receipeToCook: state.receipeToCook + 1}),
-        decrement: state => ({ ...state, receipeToCook: state.receipeToCook - 1}),
-        addToCook: (state, number) => ({ ...state, receipeToCook: state.receipeToCook + number})
+        increment: state => { state.receipeToCook = state.receipeToCook + 1},
+        decrement: state => { state.receipeToCook = state.receipeToCook - 1},
+        addToCook: (state, number) => { state.receipeToCook = state.receipeToCook + number}
     }
 }
 

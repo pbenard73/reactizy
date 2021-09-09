@@ -5,8 +5,9 @@ class LoginReducer {
     }
 
     actions = {
-        login: (state, user) => ({ ...state, user: user }),
-        logout: state => ({ ...state, user: null }),
+        login: (state, user) => { state.user = user },
+        loginFull: (state, lastname, firstname) => { state.user = \`$\{lastname} $\{firstname}\`},
+        logout: state => { state.user = null }),
     }
 
     thunks = {

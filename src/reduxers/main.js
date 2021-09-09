@@ -9,7 +9,7 @@ const mainReduxer = {
     actions: {
         ...staty("windows", "order"),
         setInnerActive: (state, active) => {
-            return { ...state, active }
+            state.active = active
         },
     },
     thunks: {
