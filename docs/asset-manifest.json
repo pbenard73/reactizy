@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "/reactizy/static/css/main.5f722a41.chunk.css",
-    "main.js": "/reactizy/static/js/main.59c6d312.chunk.js",
-    "main.js.map": "/reactizy/static/js/main.59c6d312.chunk.js.map",
+    "main.css": "/reactizy/static/css/main.ad141bc0.chunk.css",
+    "main.js": "/reactizy/static/js/main.ef58ebd9.chunk.js",
+    "main.js.map": "/reactizy/static/js/main.ef58ebd9.chunk.js.map",
     "runtime-main.js": "/reactizy/static/js/runtime-main.d0741c8e.js",
     "runtime-main.js.map": "/reactizy/static/js/runtime-main.d0741c8e.js.map",
-    "static/js/2.7b73d32e.chunk.js": "/reactizy/static/js/2.7b73d32e.chunk.js",
-    "static/js/2.7b73d32e.chunk.js.map": "/reactizy/static/js/2.7b73d32e.chunk.js.map",
+    "static/js/2.15a60d83.chunk.js": "/reactizy/static/js/2.15a60d83.chunk.js",
+    "static/js/2.15a60d83.chunk.js.map": "/reactizy/static/js/2.15a60d83.chunk.js.map",
     "index.html": "/reactizy/index.html",
-    "static/css/main.5f722a41.chunk.css.map": "/reactizy/static/css/main.5f722a41.chunk.css.map",
-    "static/js/2.7b73d32e.chunk.js.LICENSE.txt": "/reactizy/static/js/2.7b73d32e.chunk.js.LICENSE.txt"
+    "static/css/main.ad141bc0.chunk.css.map": "/reactizy/static/css/main.ad141bc0.chunk.css.map",
+    "static/js/2.15a60d83.chunk.js.LICENSE.txt": "/reactizy/static/js/2.15a60d83.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.d0741c8e.js",
-    "static/js/2.7b73d32e.chunk.js",
-    "static/css/main.5f722a41.chunk.css",
-    "static/js/main.59c6d312.chunk.js"
+    "static/js/2.15a60d83.chunk.js",
+    "static/css/main.ad141bc0.chunk.css",
+    "static/js/main.ef58ebd9.chunk.js"
   ]
 }

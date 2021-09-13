@@ -22,6 +22,7 @@ const Dashboard = () => {
                 <h1>Reactizy</h1>
                 <h2>React toolkit to simplify the life</h2>
                 <small>v8.0.0</small>
+                <h3>Deprecated</h3>
             </div>
             <div className='icon_board'>
                 <Icon icon={GetAppIcon} label={"Installation"} onClick={windowManager.showInstall} />

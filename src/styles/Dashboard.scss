@@ -23,6 +23,13 @@ $textColor: #bdbdbd;
         align-items: center;
         flex-direction: column;
         justify-content: center;
+        h3 {
+            position: absolute;
+            font-size: 60px;
+            transform: rotate(-27deg);
+            color: #bb0000;
+            text-shadow: 0 0 8px white;
+        }
         h1,
         h2 {
             position: relative;
